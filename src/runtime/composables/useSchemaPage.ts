@@ -11,6 +11,8 @@ import { useHead } from '#app'
  * FAQPage Schema를 페이지 head에 추가하는 composable
  *
  * @param data - FAQPage Schema 입력 데이터
+ * @param data.mainEntity - FAQ 질문과 답변 배열
+ * @param data.renderHtml - 시맨틱 HTML 자동 생성 여부 (기본값: true)
  *
  * @example
  * ```ts

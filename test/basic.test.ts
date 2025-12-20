@@ -1,18 +1,11 @@
 import { fileURLToPath } from 'node:url'
-import { describe, it, expect, beforeAll, afterAll } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import { setup, $fetch } from '@nuxt/test-utils/e2e'
 
-describe('nuxt-aeo module', () => {
-  beforeAll(async () => {
-    await setup({
-      rootDir: fileURLToPath(new URL('./fixtures/basic', import.meta.url)),
-      server: true,
-      port: 0, // 랜덤 포트 사용
-    })
-  })
-
-  afterAll(async () => {
-    // Cleanup은 setup이 자동으로 처리합니다
+describe('nuxt-aeo module', async () => {
+  await setup({
+    rootDir: fileURLToPath(new URL('./fixtures/basic', import.meta.url)),
+    server: true,
   })
 
   it('renders the index page', async () => {
