@@ -19,7 +19,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/dewdew/nuxt-aeo"
+    "url": "https://github.com/dewdew/nuxt-aeo.git"
   },
   "author": "Yeonju Lee (Dewdew)",
   "license": "MIT",
@@ -43,6 +43,7 @@
   ],
   "scripts": {
     "prepack": "nuxt-module-build build",
+    "prepare": "nuxt-module-build build",
     "dev": "npm run dev:prepare && nuxi dev playground",
     "dev:build": "nuxi build playground",
     "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
