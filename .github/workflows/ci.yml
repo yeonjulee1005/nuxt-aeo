@@ -15,6 +15,10 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24.5
+
       - name: Install bun
         uses: oven-sh/setup-bun@v2
         with:
@@ -24,7 +28,7 @@ jobs:
         run: bun install
 
       - name: Lint
-        run: bun run lint
+        run: bun lint
 
   test:
     runs-on: ubuntu-latest
@@ -34,7 +38,7 @@ jobs:
 
       - uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 24.5
 
       - run: npm i -g --force corepack@latest && corepack enable
 
@@ -50,7 +54,7 @@ jobs:
         run: npm run dev:prepare
 
       - name: Test
-        run: bun run test
+        run: bun test
 
   publish:
     runs-on: ubuntu-latest
@@ -65,30 +69,44 @@ jobs:
 
       - uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 24.5
+
+      - name: Install bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
 
       - name: Install dependencies
-        run: npm install
+        run: bun install
 
-      - name: Prepare
-        run: npm run prepare
+      - name: Build package
+        run: bun prepack
 
       - name: Publish to npmjs.com
-        run: npm publish
+        run: npm publish --registry=https://registry.npmjs.org/
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish to GitHub Packages
         run: |
+          # package.json 백업
+          cp package.json package.json.backup
+          
           # package.json을 임시로 수정하여 GitHub Packages용으로 변경
           npm pkg set name=@yeonjulee1005/nuxt-aeo
           npm pkg set publishConfig.registry=https://npm.pkg.github.com
+          
+          # prepack 스크립트를 임시로 제거하여 재빌드 방지
+          npm pkg delete scripts.prepack
           
           # GitHub Packages 레지스트리 설정
           echo "@yeonjulee1005:registry=https://npm.pkg.github.com" >> .npmrc
           echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> .npmrc
           
-          # GitHub Packages에 publish
-          npm publish
+          # GitHub Packages에 publish (이미 빌드된 dist 사용)
+          npm publish --registry=https://npm.pkg.github.com --ignore-scripts
+          
+          # package.json 복원
+          mv package.json.backup package.json
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
