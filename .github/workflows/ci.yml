@@ -15,17 +15,16 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - uses: actions/setup-node@v6
+      - name: Install bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: 20
-
-      - run: npm i -g --force corepack@latest && corepack enable
+          bun-version: latest
 
       - name: Install dependencies
-        run: npx nypm@latest i
+        run: bun install
 
       - name: Lint
-        run: npm run lint
+        run: bun run lint
 
   test:
     runs-on: ubuntu-latest
@@ -39,11 +38,57 @@ jobs:
 
       - run: npm i -g --force corepack@latest && corepack enable
 
+      - name: Install bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
       - name: Install dependencies
-        run: npx nypm@latest i
+        run: bun install
 
       - name: Playground prepare
         run: npm run dev:prepare
 
       - name: Test
-        run: npm run test
+        run: bun run test
+
+  publish:
+    runs-on: ubuntu-latest
+    needs: [lint, test]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    permissions:
+      contents: write
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Prepare
+        run: npm run prepare
+
+      - name: Publish to npmjs.com
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish to GitHub Packages
+        run: |
+          # package.json을 임시로 수정하여 GitHub Packages용으로 변경
+          npm pkg set name=@yeonjulee1005/nuxt-aeo
+          npm pkg set publishConfig.registry=https://npm.pkg.github.com
+          
+          # GitHub Packages 레지스트리 설정
+          echo "@yeonjulee1005:registry=https://npm.pkg.github.com" >> .npmrc
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> .npmrc
+          
+          # GitHub Packages에 publish
+          npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
