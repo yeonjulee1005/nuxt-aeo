@@ -1,10 +1,7 @@
-name: ci
+name: Test and Publish
 
 on:
   push:
-    branches:
-      - main
-  pull_request:
     branches:
       - main
 
