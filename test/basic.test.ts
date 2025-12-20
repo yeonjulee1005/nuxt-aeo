@@ -8,6 +8,7 @@ describe('nuxt-aeo module', async () => {
     server: true,
     build: true,
     port: 0,
+    waitFor: 2000,
   })
   it('renders the index page', async () => {
     const html = await $fetch('/')
