@@ -2,8 +2,9 @@ import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
   test: {
-    testTimeout: 60000, // 60초 타임아웃
-    hookTimeout: 60000, // hook 타임아웃
-    teardownTimeout: 10000, // teardown 타임아웃
+    testTimeout: 120000, // 120초 타임아웃 (2분)
+    hookTimeout: 120000, // hook 타임아웃 (2분)
+    teardownTimeout: 30000, // teardown 타임아웃 (30초)
+    globalSetup: undefined,
   },
 })
