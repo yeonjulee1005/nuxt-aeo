@@ -1,19 +1,32 @@
-import { defineNuxtModule, addPlugin, createResolver } from '@nuxt/kit'
+import { defineNuxtModule, addPlugin, addImportsDir, createResolver } from '@nuxt/kit'
+import type { ModuleOptions } from './runtime/types'
 
-// Module options TypeScript interface definition
-export interface ModuleOptions {}
+// Re-export ModuleOptions for external use
+export type { ModuleOptions } from './runtime/types'
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {
-    name: 'my-module',
-    configKey: 'myModule',
+    name: 'nuxt-aeo',
+    configKey: 'aeo',
   },
   // Default configuration options of the Nuxt module
-  defaults: {},
-  setup(_options, _nuxt) {
+  defaults: {
+    autoInject: true,
+  },
+  setup(options, nuxt) {
     const resolver = createResolver(import.meta.url)
+
+    // 모듈 옵션을 런타임 설정에 추가하여 플러그인에서 접근 가능하도록 함
+    nuxt.options.runtimeConfig.public = nuxt.options.runtimeConfig.public || {}
+    ;(nuxt.options.runtimeConfig.public as Record<string, unknown>).aeo = {
+      schemas: options.schemas,
+      autoInject: options.autoInject ?? true,
+    }
 
     // Do not add the extension since the `.ts` will be transpiled to `.mjs` after `npm run prepack`
     addPlugin(resolver.resolve('./runtime/plugin'))
+
+    // Auto-import composables from runtime/composables directory
+    addImportsDir(resolver.resolve('./runtime/composables'))
   },
 })

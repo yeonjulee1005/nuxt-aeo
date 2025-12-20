@@ -1,8 +1,27 @@
 {
   "name": "nuxt-aeo",
-  "version": "1.0.0",
-  "description": "My new Nuxt module",
-  "repository": "your-org/my-module",
+  "version": "1.1.1",
+  "description": "Nuxt module for AI Engine Optimization (AEO) using Schema.org JSON-LD structured data",
+  "keywords": [
+    "nuxt",
+    "nuxt-module",
+    "schema.org",
+    "json-ld",
+    "seo",
+    "aeo",
+    "ai-engine-optimization",
+    "structured-data",
+    "schema",
+    "person",
+    "article",
+    "faq",
+    "itemlist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dewdew/nuxt-aeo"
+  },
+  "author": "Yeonju Lee (Dewdew)",
   "license": "MIT",
   "type": "module",
   "exports": {
@@ -31,7 +50,11 @@
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest watch",
-    "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit"
+    "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit",
+    "version:major": "node scripts/version-runner.cjs major",
+    "version:minor": "node scripts/version-runner.cjs minor",
+    "version:patch": "node scripts/version-runner.cjs patch",
+    "version:clear": "node scripts/version-runner.cjs clear"
   },
   "dependencies": {
     "@nuxt/kit": "^4.2.2"
