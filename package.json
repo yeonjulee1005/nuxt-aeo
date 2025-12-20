@@ -1,6 +1,6 @@
 {
   "name": "nuxt-aeo",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "My new Nuxt module",
   "repository": "your-org/my-module",
   "license": "MIT",
@@ -31,7 +31,11 @@
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest watch",
-    "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit"
+    "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit",
+    "version:major": "node scripts/version-runner.cjs major",
+    "version:minor": "node scripts/version-runner.cjs minor",
+    "version:patch": "node scripts/version-runner.cjs patch",
+    "version:clear": "node scripts/version-runner.cjs clear"
   },
   "dependencies": {
     "@nuxt/kit": "^4.2.2"
