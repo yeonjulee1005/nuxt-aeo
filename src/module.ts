@@ -19,7 +19,7 @@ export default defineNuxtModule<ModuleOptions>({
     // 모듈 옵션을 런타임 설정에 추가하여 플러그인에서 접근 가능하도록 함
     nuxt.options.runtimeConfig.public = nuxt.options.runtimeConfig.public || {}
     ;(nuxt.options.runtimeConfig.public as Record<string, unknown>).aeo = {
-      person: options.person,
+      schemas: options.schemas,
       autoInject: options.autoInject ?? true,
     }
 

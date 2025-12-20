@@ -11,7 +11,7 @@ Nuxt AEO
 [![Nuxt][nuxt-src]][nuxt-href]
 
 <p>
-Schema.org JSON-LD를 통해 Answer Engine Optimization (AEO)을 지원하는 Nuxt 모듈입니다.
+Schema.org JSON-LD를 통해 AI Engine Optimization (AEO)을 지원하는 Nuxt 모듈입니다.
 </p>
 
 <p>
@@ -24,9 +24,13 @@ Schema.org JSON-LD를 통해 Answer Engine Optimization (AEO)을 지원하는 Nu
 
 ## AEO란?
 
-**Answer Engine Optimization (AEO)**는 검색 엔진이 사용자의 질문에 직접 답변을 제공할 수 있도록 구조화된 데이터를 최적화하는 기법입니다. 
+**AI Engine Optimization (AEO)**는 AI 모델(ChatGPT, Claude, Perplexity 등)과 검색 엔진이 웹 콘텐츠를 더 잘 이해하고, 사용자의 질문에 정확한 답변을 제공할 수 있도록 구조화된 데이터를 최적화하는 기법입니다.
 
-이 모듈은 Schema.org JSON-LD 형식을 사용하여 웹페이지에 구조화된 데이터를 추가하고, `useHead()`를 통해 SSR 환경에서 자동으로 `<head>` 태그에 스크립트를 주입합니다. 이를 통해 검색 엔진이 콘텐츠를 더 잘 이해하고, 사용자에게 더 정확한 답변을 제공할 수 있습니다.
+이 모듈은 Schema.org JSON-LD 형식을 사용하여 웹페이지에 구조화된 데이터를 추가하고, `useHead()`를 통해 SSR 환경에서 자동으로 `<head>` 태그에 스크립트를 주입합니다. 이를 통해:
+
+- 🤖 **AI 모델 최적화**: ChatGPT, Claude, Perplexity 등의 AI 모델이 콘텐츠를 크롤링하고 이해할 때 구조화된 데이터를 활용하여 더 정확한 정보를 제공하고 인용할 수 있습니다
+- 🔍 **검색 엔진 최적화**: Google, Bing 등의 검색 엔진이 Featured Snippets, Knowledge Graph 등에 콘텐츠를 표시할 수 있습니다
+- 📊 **답변 엔진 최적화**: 검색 엔진과 AI 모델이 사용자의 질문에 직접 답변을 제공할 수 있도록 최적화합니다
 
 ## Installation
 
@@ -42,22 +46,42 @@ npx nuxi module add nuxt-aeo
 
 `nuxt.config.ts`에서 모듈 옵션을 설정할 수 있습니다:
 
+### 전역 스키마 설정
+
 ```ts
 // nuxt.config.ts
 export default defineNuxtConfig({
   modules: ['nuxt-aeo'],
   aeo: {
-    // 전역 Person 정보 (모든 페이지에 자동 주입)
-    person: {
-      name: 'Yeonju Lee',
-      alternateName: 'Dewdew',
-      jobTitle: 'Software Engineer / CDO',
-      url: 'https://www.example.com',
-      image: 'https://www.example.com/profile.jpg',
-      knowsAbout: ['Nuxt3', 'TypeScript', 'Supabase'],
-      sameAs: ['https://github.com/dewdew'],
-    },
+    // 전역 스키마 배열 (모든 페이지에 자동 주입)
+    // Person, Organization, WebSite 등 다양한 스키마 타입을 설정할 수 있습니다
+    schemas: [
+      {
+        type: 'Organization',
+        name: 'My Company',
+        url: 'https://www.example.com',
+        logo: 'https://www.example.com/logo.png',
+      },
+      {
+        type: 'Person',
+        name: 'Yeonju Lee',
+        alternateName: 'Dewdew',
+        jobTitle: 'Software Engineer / CDO',
+        url: 'https://www.example.com',
+        image: 'https://www.example.com/profile.jpg',
+        knowsAbout: ['Nuxt3', 'TypeScript', 'Supabase'],
+        sameAs: ['https://github.com/dewdew'],
+      },
+      {
+        type: 'WebSite',
+        name: 'My Website',
+        url: 'https://www.example.com',
+        description: 'My awesome website',
+      },
+    ],
     // 자동 주입 여부 (기본값: true)
+    // false인 경우, schemas 배열이 있어도 주입하지 않습니다
+    // schemas 배열이 없으면 기본 Project Schema가 주입됩니다
     autoInject: true,
   }
 })
@@ -65,57 +89,33 @@ export default defineNuxtConfig({
 
 ### 옵션 설명
 
-- **`person`** (선택): 전역 Person Schema 정보. 설정하면 모든 페이지에 자동으로 주입됩니다.
-- **`autoInject`** (선택, 기본값: `true`): 전역 Person 정보의 자동 주입 여부를 제어합니다.
+- **`schemas`** (선택): 전역으로 주입할 스키마 배열. Person, Organization, WebSite 등 다양한 스키마 타입을 설정할 수 있습니다. 설정하면 모든 페이지에 자동으로 주입됩니다. `schemas` 배열이 없거나 비어있으면 기본 `Project` 스키마가 주입됩니다.
+- **`autoInject`** (선택, 기본값: `true`): 전역 스키마 정보의 자동 주입 여부를 제어합니다. `false`인 경우 아무것도 주입하지 않습니다.
 
 ## Features
 
 - 🎯 **타입 안전성**: TypeScript로 모든 Schema 타입이 정의되어 있어 타입 체크가 가능합니다
 - 🚀 **SSR 지원**: `useHead()`를 사용하여 서버 사이드 렌더링 환경에서 완벽하게 작동합니다
 - 📦 **자동 Import**: Composable 함수들이 자동으로 import되어 별도 import 문이 필요 없습니다
-- 🔧 **유연한 설정**: 전역 Person 정보를 설정하거나 페이지별로 개별 Schema를 추가할 수 있습니다
-- 📚 **다양한 Schema 지원**: Person, FAQPage, ItemList, Article, TechArticle 등 다양한 Schema 타입을 지원합니다
+- 🔧 **유연한 설정**: 전역 스키마를 설정하거나 페이지별로 개별 Schema를 추가할 수 있습니다
+- 📚 **다양한 Schema 지원**: Person, Organization, FAQPage, ItemList, Article 등 모든 Schema.org 타입을 지원합니다
+- ✨ **간편한 사용법**: `context`와 `type`을 사용하면 내부적으로 `@context`와 `@type`으로 자동 변환되어 따옴표 없이 사용할 수 있습니다
+- 🎨 **시맨틱 HTML 자동 생성**: FAQPage Schema에 대해 시맨틱 HTML을 자동으로 생성하여 LLM 크롤링을 최적화합니다
 
 ## Usage
 
-### Person Schema
-
-사용자 프로필 정보를 구조화된 데이터로 추가합니다:
-
-```vue
-<script setup lang="ts">
-useSchemaPerson({
-  name: 'Yeonju Lee',
-  alternateName: 'Dewdew',
-  jobTitle: 'Software Engineer / CDO',
-  url: 'https://www.example.com',
-  image: 'https://www.example.com/profile.jpg',
-  knowsAbout: ['Nuxt3', 'TypeScript', 'Supabase'],
-  sameAs: ['https://github.com/dewdew'],
-  address: {
-    addressCountry: 'KR',
-    addressLocality: 'Seoul',
-  },
-  worksFor: {
-    name: 'Example Company',
-    url: 'https://example.com',
-  },
-})
-</script>
-```
-
 ### FAQPage Schema
 
-FAQ 페이지에 질문-답변 구조를 추가합니다:
+FAQ 페이지에 질문-답변 구조를 추가합니다. `renderHtml` 옵션(기본값: `true`)을 통해 시맨틱 HTML도 자동으로 생성됩니다:
 
 ```vue
 <script setup lang="ts">
-useSchemaFAQ({
+useSchemaPage({
   mainEntity: [
     {
       name: 'Nuxt AEO 모듈이란 무엇인가요?',
       acceptedAnswer: {
-        text: 'Nuxt AEO 모듈은 Schema.org JSON-LD를 통해 Answer Engine Optimization(AEO)을 지원하는 Nuxt 모듈입니다.',
+        text: 'Nuxt AEO 모듈은 Schema.org JSON-LD를 통해 AI Engine Optimization(AEO)을 지원하는 Nuxt 모듈입니다.',
       },
     },
     {
@@ -125,102 +125,66 @@ useSchemaFAQ({
       },
     },
   ],
+  // renderHtml: true (기본값) - 시맨틱 HTML 자동 생성
+  // JSON-LD와 함께 시맨틱 HTML이 생성되어 LLM 크롤링에 더 효과적입니다
 })
 </script>
 ```
 
-### ItemList Schema
+**시맨틱 HTML 자동 생성:**
+- `renderHtml: true` (기본값)인 경우, Schema 데이터를 기반으로 시맨틱 HTML이 자동 생성됩니다
+- 생성된 HTML은 `display: none`으로 숨겨져 있지만, HTML 소스에는 포함되어 LLM과 크롤러가 읽을 수 있습니다
+- JSON-LD와 시맨틱 HTML을 함께 사용하면 AI 모델의 콘텐츠 이해도가 향상됩니다
 
-리스트 형태의 콘텐츠를 구조화된 데이터로 표현합니다:
+### 범용 useSchema 함수
+
+직접 Schema 객체를 생성하여 사용할 수도 있습니다. `context`와 `type`을 사용하면 내부적으로 `@context`와 `@type`으로 자동 변환됩니다:
 
 ```vue
 <script setup lang="ts">
-useSchemaItemList({
+// Organization Schema
+useSchema({
+  context: 'https://schema.org',
+  type: 'Organization',
+  name: 'Example Company',
+  url: 'https://example.com',
+  logo: 'https://example.com/logo.png',
+})
+
+// ItemList Schema
+useSchema({
+  context: 'https://schema.org',
+  type: 'ItemList',
   name: 'Top 10 Programming Languages',
   description: 'The most popular programming languages in 2024',
   itemListElement: [
     {
+      type: 'ListItem',
       position: 1,
       name: 'JavaScript',
       item: 'https://example.com/javascript',
     },
     {
+      type: 'ListItem',
       position: 2,
       name: 'Python',
       item: 'https://example.com/python',
     },
   ],
 })
-</script>
-```
 
-### Article Schema
-
-블로그 포스트나 기사 콘텐츠에 Article Schema를 추가합니다:
-
-```vue
-<script setup lang="ts">
-useSchemaArticle({
-  headline: 'Getting Started with Nuxt 3',
-  description: 'Learn how to build modern web applications with Nuxt 3',
-  image: 'https://example.com/article.jpg',
-  datePublished: '2024-01-01',
-  dateModified: '2024-01-02',
-  author: {
-    name: 'John Doe',
-    url: 'https://example.com/author',
-  },
-  publisher: {
-    name: 'Example Blog',
-    url: 'https://example.com',
-  },
-  mainEntityOfPage: 'https://example.com/article',
-  articleBody: 'This is the full article content...',
-})
-</script>
-```
-
-### TechArticle Schema
-
-기술 문서나 튜토리얼에 TechArticle Schema를 추가합니다:
-
-```vue
-<script setup lang="ts">
-useSchemaTechArticle({
-  headline: 'Advanced TypeScript Patterns',
-  description: 'Learn advanced TypeScript patterns and techniques',
-  image: 'https://example.com/tech-article.jpg',
-  datePublished: '2024-01-01',
-  dateModified: '2024-01-02',
-  author: {
-    name: 'Jane Smith',
-    url: 'https://example.com/author',
-  },
-  publisher: {
-    name: 'Tech Blog',
-    url: 'https://example.com',
-  },
-  dependencies: 'TypeScript 5.0+',
-  proficiencyLevel: 'Advanced',
-})
-</script>
-```
-
-### 범용 useSchema 함수
-
-직접 Schema 객체를 생성하여 사용할 수도 있습니다:
-
-```vue
-<script setup lang="ts">
+// Person Schema
 useSchema({
-  '@context': 'https://schema.org',
-  '@type': 'Organization',
-  name: 'Example Company',
+  context: 'https://schema.org',
+  type: 'Person',
+  name: 'John Doe',
+  jobTitle: 'Software Engineer',
   url: 'https://example.com',
-  logo: 'https://example.com/logo.png',
 })
 </script>
 ```
+
+**참고:** `context`와 `type`은 내부적으로 `@context`와 `@type`으로 변환되므로, 따옴표 없이 일반 속성처럼 사용할 수 있습니다. 중첩된 객체도 자동으로 변환됩니다.
 
 ## 확인 방법
 
@@ -236,6 +200,8 @@ useSchema({
 }
 </script>
 ```
+
+**참고:** `useSchema`에 `context`와 `type`을 전달하면, 내부적으로 `@context`와 `@type`으로 변환되어 JSON-LD에 주입됩니다.
 
 또한 [Google의 Rich Results Test](https://search.google.com/test/rich-results)를 사용하여 Schema가 올바르게 인식되는지 확인할 수 있습니다.
 
