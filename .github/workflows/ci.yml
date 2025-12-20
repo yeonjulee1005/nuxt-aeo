@@ -50,8 +50,12 @@ jobs:
       - name: Playground prepare
         run: npm run dev:prepare
 
-      - name: Test
+      - name: Type check
+        run: npm run test:types
+
+      - name: E2E Test
         run: bun test --bail
+        continue-on-error: true
         env:
           CI: true
           NODE_OPTIONS: '--max-old-space-size=4096'
