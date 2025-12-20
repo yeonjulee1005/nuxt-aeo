@@ -76,9 +76,6 @@ jobs:
       - name: Install dependencies
         run: bun install
 
-      - name: Prepare build environment
-        run: nuxt-module-build prepare
-
       - name: Build package
         run: bun prepack
 
