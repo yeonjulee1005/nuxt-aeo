@@ -247,3 +247,29 @@ export interface Address {
   'addressCountry'?: string
   [key: string]: unknown
 }
+
+/**
+ * Nuxt 모듈 설정 옵션 타입
+ */
+export interface ModuleOptions {
+  /**
+   * 전역 Person 정보
+   * 모든 페이지에 자동으로 주입될 Person Schema 정보
+   */
+  person?: PersonSchemaInput
+
+  /**
+   * 자동 주입 여부
+   * @default true
+   */
+  autoInject?: boolean
+}
+
+/**
+ * Nuxt Config 타입 확장
+ */
+declare module '@nuxt/schema' {
+  interface NuxtConfig {
+    aeo?: ModuleOptions
+  }
+}
