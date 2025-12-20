@@ -1,22 +1,8 @@
 import { defineNuxtModule, addPlugin, addImportsDir, createResolver } from '@nuxt/kit'
-import type { PersonSchemaInput } from './runtime/types'
+import type { ModuleOptions } from './runtime/types'
 
-/**
- * 모듈 설정 옵션
- */
-export interface ModuleOptions {
-  /**
-   * 전역 Person 정보
-   * 모든 페이지에 자동으로 주입될 Person Schema 정보
-   */
-  person?: PersonSchemaInput
-
-  /**
-   * 자동 주입 여부
-   * @default true
-   */
-  autoInject?: boolean
-}
+// Re-export ModuleOptions for external use
+export type { ModuleOptions } from './runtime/types'
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {
@@ -32,8 +18,8 @@ export default defineNuxtModule<ModuleOptions>({
 
     // 모듈 옵션을 런타임 설정에 추가하여 플러그인에서 접근 가능하도록 함
     nuxt.options.runtimeConfig.public = nuxt.options.runtimeConfig.public || {}
-    nuxt.options.runtimeConfig.public.aeo = {
-      person: options.person,
+    ;(nuxt.options.runtimeConfig.public as Record<string, unknown>).aeo = {
+      schemas: options.schemas,
       autoInject: options.autoInject ?? true,
     }
 
