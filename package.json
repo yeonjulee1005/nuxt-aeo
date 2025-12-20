@@ -1,6 +1,6 @@
 {
   "name": "nuxt-aeo",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Nuxt module for Author Experience Optimization (AEO) using Schema.org JSON-LD structured data",
   "keywords": [
     "nuxt",
