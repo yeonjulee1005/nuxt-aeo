@@ -3,6 +3,8 @@ import type { ContentNavigationItem } from '@nuxt/content'
 
 definePageMeta({
   layout: 'docs',
+  // Exclude Nuxt internal paths
+  alias: [],
 })
 
 const route = useRoute()
@@ -27,6 +29,16 @@ function mapContentNavigation(navigation: ContentNavigationItem[] | null | undef
 }
 
 const { data: page } = await useAsyncData(`docs-${route.path}`, async () => {
+  // Skip if it's a Nuxt internal path or API route
+  if (
+    route.path.startsWith('/_nuxt/')
+    || route.path.startsWith('/__nuxt')
+    || route.path.startsWith('/api/')
+    || route.path.startsWith('/_')
+  ) {
+    return null
+  }
+
   // Normalize path: remove trailing slash
   const path = route.path.endsWith('/') ? route.path.slice(0, -1) : route.path
 
@@ -39,6 +51,8 @@ const { data: page } = await useAsyncData(`docs-${route.path}`, async () => {
   }
 
   return result
+}, {
+  default: () => null,
 })
 
 if (!page.value) {
