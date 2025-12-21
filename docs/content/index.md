@@ -214,27 +214,27 @@ orientation: horizontal
     useSchemaPage({
       mainEntity: [
         {
-          name: 'Nuxt AEO 모듈이란 무엇인가요?',
+          name: 'What is the Nuxt AEO module?',
           acceptedAnswer: {
-            text: 'Nuxt AEO는 AI Engine Optimization을 구현하기 위한 Nuxt 모듈입니다. Schema.org JSON-LD 구조화된 데이터를 사용하여 AI 모델과 검색 엔진이 웹사이트 콘텐츠를 더 잘 이해할 수 있도록 도와줍니다.',
+            text: 'Nuxt AEO is a Nuxt module that implements AI Engine Optimization (AEO) using Schema.org JSON-LD structured data. It helps AI models and search engines better understand website content.',
           },
         },
         {
-          name: '어떤 Schema 타입을 지원하나요?',
+          name: 'What Schema types are supported?',
           acceptedAnswer: {
-            text: 'Nuxt AEO는 Person, Organization, Article, ItemList 등 다양한 Schema.org 타입을 지원합니다. useSchema()와 useSchemaPage() composable을 통해 전역 스키마와 페이지별 스키마를 모두 설정할 수 있습니다.',
+            text: 'Nuxt AEO supports various Schema.org types including Person, Organization, Article, ItemList, and more. You can configure both global schemas and page-specific schemas through useSchema() and useSchemaPage() composables.',
           },
         },
         {
-          name: '설치 후 바로 사용할 수 있나요?',
+          name: 'Can I use it immediately after installation?',
           acceptedAnswer: {
-            text: '네, Nuxt AEO는 설치 후 바로 사용할 수 있습니다. 모듈을 설치하고 nuxt.config.ts에 추가한 후, useSchema() 또는 useSchemaPage() composable을 사용하여 스키마를 정의하면 됩니다. 추가 설정 없이도 기본 동작을 제공합니다.',
+            text: 'Yes! Nuxt AEO can be used immediately after installation. Once you install the module and add it to nuxt.config.ts, you can define schemas using useSchema() or useSchemaPage() composables. It provides default behavior without additional configuration.',
           },
         },
         {
-          name: 'useSchemaPage()와 useSchema()의 차이는?',
+          name: 'What is the difference between useSchemaPage() and useSchema()?',
           acceptedAnswer: {
-            text: 'useSchema()는 페이지의 주요 콘텐츠를 설명하는 스키마(예: Article, Person)를 정의할 때 사용하고, useSchemaPage()는 페이지 자체에 대한 메타데이터(예: FAQPage, BreadcrumbList)를 정의할 때 사용합니다. 두 composable을 함께 사용하여 페이지의 콘텐츠와 메타데이터를 모두 구조화할 수 있습니다.',
+            text: 'useSchema() is used to define schemas that describe the main content of a page (e.g., Article, Person), while useSchemaPage() is used to define metadata about the page itself (e.g., FAQPage, BreadcrumbList). You can use both composables together to structure both page content and metadata.',
           },
         },
       ],
@@ -244,7 +244,7 @@ orientation: horizontal
     <template>
       <div>
         <h1>Nuxt AEO</h1>
-        <!-- 페이지 콘텐츠 -->
+        <!--Page Content-->
       </div>
     </template>
     ```
