@@ -16,11 +16,13 @@ export default defineNuxtModule<ModuleOptions>({
   setup(options, nuxt) {
     const resolver = createResolver(import.meta.url)
 
-    // 모듈 옵션을 런타임 설정에 추가하여 플러그인에서 접근 가능하도록 함
+    // Add module options to runtime config so plugin can access them
     nuxt.options.runtimeConfig.public = nuxt.options.runtimeConfig.public || {}
     ;(nuxt.options.runtimeConfig.public as Record<string, unknown>).aeo = {
       schemas: options.schemas,
       autoInject: options.autoInject ?? true,
+      renderHtml: options.renderHtml,
+      visuallyHidden: options.visuallyHidden,
     }
 
     // Do not add the extension since the `.ts` will be transpiled to `.mjs` after `npm run prepack`

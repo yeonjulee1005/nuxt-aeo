@@ -3,10 +3,10 @@
 </template>
 
 <script setup>
-// 모듈이 정상적으로 로드되었는지 테스트하기 위해 composable 사용
+// Use composable to test that module is loaded correctly
 import { useSchema } from '#imports'
 
-// 테스트용 간단한 스키마 추가
+// Add simple schema for testing
 useSchema({
   context: 'https://schema.org',
   type: 'WebPage',
