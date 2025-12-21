@@ -7,7 +7,8 @@
     "build": "nuxi build",
     "generate": "nuxi generate",
     "preview": "nuxi preview",
-    "cleanup": "rm -rf .nuxt .output .data node_modules/.cache"
+    "cleanup": "rm -rf .nuxt .output .data node_modules/.cache",
+    "vercel-build": "nuxi generate"
   },
   "dependencies": {
     "@nuxt/content": "^3.0.0",
