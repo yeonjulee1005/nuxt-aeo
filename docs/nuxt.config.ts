@@ -10,6 +10,8 @@ export default defineNuxtConfig({
     '@nuxt/image',
   ],
 
+  devtools: { enabled: true },
+
   app: {
     head: {
       link: [
@@ -21,8 +23,6 @@ export default defineNuxtConfig({
       ],
     },
   },
-
-  devtools: { enabled: true },
 
   css: ['~/assets/css/main.css'],
 
@@ -46,6 +46,11 @@ export default defineNuxtConfig({
   routeRules: {
     // Prerender all pages at build time
     '/**': { prerender: true },
+  },
+
+  // Experimental features for better static generation
+  experimental: {
+    payloadExtraction: false,
   },
 
   // Static site generation for Vercel
