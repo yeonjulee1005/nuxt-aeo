@@ -204,6 +204,112 @@ Set up easily using [useSchema()]{.text-(--ui-secondary)} composable
 
 ::u-page-section
 ---
+reverse: true
+orientation: horizontal
+---
+  :::tabs
+    ::::tabs-item{icon="i-simple-icons-nuxtdotjs" label="pages/index.vue"}
+    ```vue [pages/index.vue]
+    <script setup lang="ts">
+    useSchemaPage({
+      mainEntity: [
+        {
+          name: 'Nuxt AEO 모듈이란 무엇인가요?',
+          acceptedAnswer: {
+            text: 'Nuxt AEO는 AI Engine Optimization을 구현하기 위한 Nuxt 모듈입니다. Schema.org JSON-LD 구조화된 데이터를 사용하여 AI 모델과 검색 엔진이 웹사이트 콘텐츠를 더 잘 이해할 수 있도록 도와줍니다.',
+          },
+        },
+        {
+          name: '어떤 Schema 타입을 지원하나요?',
+          acceptedAnswer: {
+            text: 'Nuxt AEO는 Person, Organization, Article, ItemList 등 다양한 Schema.org 타입을 지원합니다. useSchema()와 useSchemaPage() composable을 통해 전역 스키마와 페이지별 스키마를 모두 설정할 수 있습니다.',
+          },
+        },
+        {
+          name: '설치 후 바로 사용할 수 있나요?',
+          acceptedAnswer: {
+            text: '네, Nuxt AEO는 설치 후 바로 사용할 수 있습니다. 모듈을 설치하고 nuxt.config.ts에 추가한 후, useSchema() 또는 useSchemaPage() composable을 사용하여 스키마를 정의하면 됩니다. 추가 설정 없이도 기본 동작을 제공합니다.',
+          },
+        },
+        {
+          name: 'useSchemaPage()와 useSchema()의 차이는?',
+          acceptedAnswer: {
+            text: 'useSchema()는 페이지의 주요 콘텐츠를 설명하는 스키마(예: Article, Person)를 정의할 때 사용하고, useSchemaPage()는 페이지 자체에 대한 메타데이터(예: FAQPage, BreadcrumbList)를 정의할 때 사용합니다. 두 composable을 함께 사용하여 페이지의 콘텐츠와 메타데이터를 모두 구조화할 수 있습니다.',
+          },
+        },
+      ],
+    })
+    </script>
+
+    <template>
+      <div>
+        <h1>Nuxt AEO</h1>
+        <!-- 페이지 콘텐츠 -->
+      </div>
+    </template>
+    ```
+    ::::
+
+    ::::tabs-item{icon="i-lucide-eye" label="Preview"}
+      :::::browser-frame
+        ::::::example-article-schema
+        ---
+        author: Nuxt AEO
+        headline: FAQPage Schema Example
+        datePublished: 2024-01-01
+        ---
+        #title
+        FAQPage Schema Example.
+
+        #description
+        Learn how to use useSchemaPage() composable to add FAQPage schema for better AI and search engine understanding.
+        ::::::
+      :::::
+    ::::
+  :::
+
+#title{unwrap="p" class="!my-0 !leading-tight"}
+Add FAQPage schema with [useSchemaPage()]{.text-(--ui-secondary)} composable
+
+#features
+  :::u-page-feature
+  ---
+  icon: i-lucide-message-circle-question
+  ---
+  #title{unwrap="p"}
+  Structure FAQs for AI models
+  :::
+
+  :::u-page-feature
+  ---
+  icon: i-lucide-search
+  ---
+  #title{unwrap="p"}
+  Improve search engine understanding
+  :::
+
+  :::u-page-feature
+  ---
+  icon: i-lucide-file-code
+  ---
+  #title{unwrap="p"}
+  Easy FAQPage schema definition
+  :::
+
+#links
+  :::u-button
+  ---
+  color: neutral
+  label: Learn more about useSchemaPage()
+  to: /guide/usage
+  trailingIcon: i-lucide-arrow-right
+  variant: subtle
+  ---
+  :::
+::
+
+::u-page-section
+---
 reverse: false
 orientation: vertical
 ---

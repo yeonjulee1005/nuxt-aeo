@@ -226,6 +226,61 @@ Using each composable function automatically adds a JSON-LD script to the page's
 - If semantic HTML is generated, you can check for elements with the `nuxt-aeo-semantic-*` class in Developer Tools.
 - You can use [Google's Rich Results Test](https://search.google.com/test/rich-results) to verify that your Schema is correctly recognized.
 
+## Frequently Asked Questions
+
+This page includes FAQPage Schema to help AI models and search engines understand common questions about Nuxt AEO.
+
+```vue
+<script setup lang="ts">
+useSchemaPage({
+  mainEntity: [
+    {
+      name: 'What is the Nuxt AEO module?',
+      acceptedAnswer: {
+        text: 'Nuxt AEO is a Nuxt module that implements AI Engine Optimization (AEO) using Schema.org JSON-LD structured data. It helps AI models (ChatGPT, Claude, Perplexity, etc.) and search engines better understand web content and provide accurate answers to user questions.',
+      },
+    },
+    {
+      name: 'What Schema types are supported?',
+      acceptedAnswer: {
+        text: 'Nuxt AEO supports all Schema.org types including Person, Organization, FAQPage, ItemList, Article, TechArticle, NewsArticle, WebSite, and more. You can use any Schema.org type through the useSchema() composable.',
+      },
+    },
+    {
+      name: 'Can I use it immediately after installation?',
+      acceptedAnswer: {
+        text: 'Yes! Once you install the module with `bun add nuxt-aeo` and add it to your `nuxt.config.ts`, you can start using it immediately. If you don\'t configure global schemas, a default Project schema will be automatically injected. You can also add schemas per page using useSchema() or useSchemaPage() composables.',
+      },
+    },
+    {
+      name: 'What is the difference between useSchemaPage() and useSchema()?',
+      acceptedAnswer: {
+        text: 'useSchemaPage() is a specialized composable for FAQPage Schema that provides a simpler API for adding question-answer structures. useSchema() is a universal composable that can create any Schema.org type. Both support automatic semantic HTML generation and visual hiding options.',
+      },
+    },
+    {
+      name: 'How does automatic semantic HTML generation work?',
+      acceptedAnswer: {
+        text: 'When renderHtml is set to true (default), Nuxt AEO automatically generates semantic HTML based on your schema data. This HTML is hidden from users (when visuallyHidden is true) but is included in the HTML source for LLMs and crawlers to read. Using JSON-LD together with semantic HTML improves AI model content understanding.',
+      },
+    },
+  ],
+})
+</script>
+```
+
+### Question List
+
+- **What is the Nuxt AEO module?**: A Nuxt module that implements AI Engine Optimization (AEO) using Schema.org JSON-LD structured data to help AI models and search engines better understand web content.
+
+- **What Schema types are supported?**: Supports all Schema.org types including Person, Organization, FAQPage, ItemList, Article, TechArticle, NewsArticle, WebSite, and more.
+
+- **Can I use it immediately after installation?**: Yes! Once installed and added to your config, you can start using it immediately. A default Project schema is automatically injected if no global schemas are configured.
+
+- **What is the difference between useSchemaPage() and useSchema()?**: useSchemaPage() is specialized for FAQPage Schema with a simpler API, while useSchema() is a universal composable for any Schema.org type.
+
+- **How does automatic semantic HTML generation work?**: When enabled (default), semantic HTML is automatically generated from schema data and hidden from users but accessible to LLMs and crawlers, improving AI model content understanding.
+
 ## Documentation
 
 For more detailed documentation, please refer to the [documentation site](/docs).
