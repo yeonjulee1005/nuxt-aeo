@@ -107,6 +107,36 @@ useSchema({
   renderHtml: true,
   visuallyHidden: true,
 })
+
+// Add FAQPage Schema for Person Schema-related questions
+useSchemaPage({
+  mainEntity: [
+    {
+      name: 'Person Schema는 언제 사용하나요?',
+      acceptedAnswer: {
+        text: 'Person Schema는 개인 프로필 페이지, 팀 소개 페이지, 저자 정보 페이지 등에서 사용됩니다. 특정 인물의 이름, 직업, 소셜 미디어 링크, 기술 스택 등의 정보를 구조화된 데이터로 제공하여 AI 모델과 검색 엔진이 해당 인물에 대한 정보를 더 잘 이해할 수 있도록 합니다.',
+      },
+    },
+    {
+      name: 'knowsAbout 속성은 무엇인가요?',
+      acceptedAnswer: {
+        text: 'knowsAbout 속성은 해당 인물이 알고 있는 주제나 기술 스택을 나타내는 배열입니다. 예를 들어 ["JavaScript", "TypeScript", "Vue.js"]와 같이 기술 스택을 나열할 수 있으며, 이를 통해 AI 모델이 해당 인물의 전문 분야를 파악할 수 있습니다.',
+      },
+    },
+    {
+      name: '전역 설정과 페이지별 설정의 차이는?',
+      acceptedAnswer: {
+        text: '전역 설정(nuxt.config.ts의 aeo.schemas)은 모든 페이지에 자동으로 적용되는 스키마로, 사이트 전체에 공통으로 적용되는 Organization이나 주요 Person 정보에 사용합니다. 페이지별 설정(useSchema())은 특정 페이지에만 적용되는 스키마로, 각 페이지의 고유한 Person 정보를 추가할 때 사용합니다.',
+      },
+    },
+    {
+      name: 'Person Schema의 필수 속성은 무엇인가요?',
+      acceptedAnswer: {
+        text: 'Person Schema에서 필수 속성은 name입니다. 하지만 더 풍부한 정보를 제공하기 위해 jobTitle, description, image, url, sameAs(소셜 미디어 링크), knowsAbout(기술 스택) 등을 추가하는 것이 좋습니다. worksFor 속성을 통해 소속 조직 정보도 포함할 수 있습니다.',
+      },
+    },
+  ],
+})
 </script>
 
 <style scoped>

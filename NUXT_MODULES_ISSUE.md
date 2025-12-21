@@ -1,8 +1,16 @@
 ## Description
 
-Nuxt module for AI Engine Optimization (AEO) using Schema.org JSON-LD structured data. This module helps AI models (ChatGPT, Claude, Perplexity, etc.) and search engines understand content better and provide more accurate answers to users by adding structured data to web pages.
+A simple, type-safe Nuxt module for AI Engine Optimization (AEO) using Schema.org JSON-LD structured data. Helps AI models (ChatGPT, Claude, Perplexity, etc.) and search engines understand your content better by automatically injecting structured data into web pages.
 
-The module provides TypeScript-safe composables for various Schema.org types including Person, FAQPage, ItemList, Article, and TechArticle. It automatically injects JSON-LD scripts into the `<head>` tag using `useHead()` for perfect SSR support.
+Features:
+- 🎯 TypeScript-safe composables with auto-import
+- 🚀 Full SSR support using `useHead()`
+- ✨ Automatic semantic HTML generation for better LLM crawling
+- 📚 Support for all Schema.org types (Person, Organization, FAQPage, ItemList, Article, etc.)
+- 🎨 Flexible configuration at global or page level
+
+Docs: https://nuxt-aeo-docs.vercel.app
+Playground: https://nuxt-aeo-playground.vercel.app
 
 **Repository**
 https://github.com/yeonjulee1005/nuxt-aeo

@@ -150,6 +150,36 @@ useSchema({
   renderHtml: true,
   visuallyHidden: true,
 })
+
+// Add FAQPage Schema for Article Schema-related questions
+useSchemaPage({
+  mainEntity: [
+    {
+      name: 'Article Schema는 언제 사용하나요?',
+      acceptedAnswer: {
+        text: 'Article Schema는 블로그 포스트, 뉴스 기사, 매거진 기사, 기술 문서 등 텍스트 기반 콘텐츠에 사용됩니다. 제목, 설명, 작성자, 발행일, 수정일, 발행자, 키워드, 본문 등의 정보를 구조화된 데이터로 제공하여 검색 엔진과 AI 모델이 기사의 메타데이터와 내용을 더 잘 이해할 수 있도록 합니다.',
+      },
+    },
+    {
+      name: 'datePublished 형식은 어떻게 되나요?',
+      acceptedAnswer: {
+        text: 'datePublished와 dateModified는 ISO 8601 형식의 날짜 문자열을 사용합니다. 예: "2024-01-15" (날짜만) 또는 "2024-01-15T10:30:00Z" (날짜와 시간 포함). YYYY-MM-DD 형식이 가장 일반적으로 사용되며, 시간 정보가 필요한 경우에는 전체 ISO 8601 형식을 사용할 수 있습니다.',
+      },
+    },
+    {
+      name: 'author와 publisher의 차이는?',
+      acceptedAnswer: {
+        text: 'author는 기사를 작성한 개인 또는 여러 작성자를 나타내며, Person 타입으로 설정합니다. publisher는 기사를 발행한 조직이나 회사를 나타내며, Organization 타입으로 설정합니다. 예를 들어, 개인이 블로그에 글을 작성했다면 author는 해당 개인이고, publisher는 블로그를 운영하는 조직이 될 수 있습니다.',
+      },
+    },
+    {
+      name: 'Article Schema의 하위 타입을 사용할 수 있나요?',
+      acceptedAnswer: {
+        text: '네, Article Schema의 하위 타입으로 TechArticle, NewsArticle, BlogPosting, ScholarlyArticle 등을 사용할 수 있습니다. 각 하위 타입은 특정 종류의 기사에 더 적합한 속성을 제공합니다. 예를 들어, 기술 문서에는 TechArticle을, 뉴스 기사에는 NewsArticle을 사용하는 것이 좋습니다.',
+      },
+    },
+  ],
+})
 </script>
 
 <style scoped>
