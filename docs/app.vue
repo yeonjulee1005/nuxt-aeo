@@ -33,6 +33,12 @@ const navItems = computed<NavigationMenuItem[]>(() => [
     to: '/examples/organization',
     active: route.path.startsWith('/examples'),
   },
+  {
+    label: 'Playground',
+    icon: 'i-lucide-play',
+    to: 'https://nuxt-aeo-playground.vercel.app',
+    target: '_blank',
+  },
 ])
 </script>
 

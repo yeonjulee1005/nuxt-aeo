@@ -16,8 +16,8 @@ A Nuxt module that implements AI Engine Optimization (AEO) using Schema.org JSON
 
 <p>
   <a href="https://github.com/yeonjulee1005/nuxt-aeo/releases">✨ Release Notes</a>
-  <!-- | <a href="https://stackblitz.com/github/your-org/nuxt-aeo?file=playground%2Fapp.vue">🏀 Online playground</a> -->
-  | <a href="/docs">📖 Documentation</a>
+  | <a href="https://nuxt-aeo-playground.vercel.app">🏀 Online playground</a>
+  | <a href="https://nuxt-aeo-docs.vercel.app">📖 Documentation</a>
 </p>
 
 <br>
