@@ -1,6 +1,6 @@
 {
   "name": "nuxt-aeo",
-  "version": "1.1.4",
+  "version": "1.2.1",
   "description": "Nuxt module for AI Engine Optimization (AEO) using Schema.org JSON-LD structured data",
   "keywords": [
     "nuxt",
