@@ -48,7 +48,9 @@
           {{ article.description }}
         </p>
 
-        <div v-html="article.articleBody" />
+        <div>
+          {{ article.articleBody }}
+        </div>
       </div>
 
       <footer class="article-footer">

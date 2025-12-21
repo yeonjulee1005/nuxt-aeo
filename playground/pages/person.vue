@@ -10,32 +10,57 @@
         >
         <div class="profile-info">
           <h1>{{ person.name }}</h1>
-          <p v-if="person.alternateName" class="alternate-name">
+          <p
+            v-if="person.alternateName"
+            class="alternate-name"
+          >
             {{ person.alternateName }}
           </p>
-          <p v-if="person.jobTitle" class="job-title">
+          <p
+            v-if="person.jobTitle"
+            class="job-title"
+          >
             {{ person.jobTitle }}
           </p>
-          <p v-if="person.description" class="description">
+          <p
+            v-if="person.description"
+            class="description"
+          >
             {{ person.description }}
           </p>
         </div>
       </div>
 
-      <div v-if="person.knowsAbout && person.knowsAbout.length > 0" class="skills-section">
+      <div
+        v-if="person.knowsAbout && person.knowsAbout.length > 0"
+        class="skills-section"
+      >
         <h2>Technical Stack</h2>
         <ul class="skills-list">
-          <li v-for="(skill, index) in person.knowsAbout" :key="index">
+          <li
+            v-for="(skill, index) in person.knowsAbout"
+            :key="index"
+          >
             {{ skill }}
           </li>
         </ul>
       </div>
 
-      <div v-if="person.sameAs && person.sameAs.length > 0" class="social-section">
+      <div
+        v-if="person.sameAs && person.sameAs.length > 0"
+        class="social-section"
+      >
         <h2>Social Media</h2>
         <ul class="social-list">
-          <li v-for="(url, index) in person.sameAs" :key="index">
-            <a :href="url" target="_blank" rel="noopener noreferrer">{{ url }}</a>
+          <li
+            v-for="(url, index) in person.sameAs"
+            :key="index"
+          >
+            <a
+              :href="url"
+              target="_blank"
+              rel="noopener noreferrer"
+            >{{ url }}</a>
           </li>
         </ul>
       </div>

@@ -1,5 +1,5 @@
 export default defineNuxtConfig({
-  modules: ['../src/module'],
+  modules: ['nuxt-aeo'],
   devtools: { enabled: true },
   /**
    * AEO (AI Engine Optimization) module configuration
