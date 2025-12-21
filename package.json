@@ -19,7 +19,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/dewdew/nuxt-aeo.git"
+    "url": "https://github.com/yeonjulee1005/nuxt-aeo.git"
   },
   "author": "Yeonju Lee (Dewdew)",
   "license": "MIT",
@@ -54,7 +54,10 @@
     "version:major": "node scripts/version-runner.cjs major",
     "version:minor": "node scripts/version-runner.cjs minor",
     "version:patch": "node scripts/version-runner.cjs patch",
-    "version:clear": "node scripts/version-runner.cjs clear"
+    "version:clear": "node scripts/version-runner.cjs clear",
+    "docs:dev": "cd docs && npm run dev",
+    "docs:build": "cd docs && npm run build",
+    "docs:preview": "cd docs && npm run preview"
   },
   "dependencies": {
     "@nuxt/kit": "^4.2.2"

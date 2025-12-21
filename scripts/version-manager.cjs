@@ -8,14 +8,14 @@ const { execSync } = require('node:child_process')
 const packageJsonPath = path.join(__dirname, '../package.json')
 const packageLockPath = path.join(__dirname, '../package-lock.json')
 
-// 필수 파일 존재 여부 확인
+// Check if required files exist
 if (!fs.existsSync(packageJsonPath)) {
-  throw new Error('❌ package.json 파일을 찾을 수 없습니다.')
+  throw new Error('❌ package.json file not found.')
 }
 
 const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'))
 
-// package-lock.json은 있으면 사용, 없으면 무시
+// Use package-lock.json if it exists, ignore if not
 let packageLock = null
 if (fs.existsSync(packageLockPath)) {
   packageLock = JSON.parse(fs.readFileSync(packageLockPath, 'utf8'))
@@ -41,13 +41,10 @@ if (
 const parseHeadVersion = (version) => {
   const parts = version.split('.')
   if (parts.length !== 3) {
-    // 초기 버전이 semver 형태라면 headVersion으로 변환
+    // Convert initial version to headVersion if it's in semver format
     return {
       major: 1,
-      minor: Number.parseInt(
-        new Date().getFullYear().toString().slice(-2)
-          + String(new Date().getMonth() + 1).padStart(2, '0'),
-      ),
+      minor: 0,
       patch: 1,
     }
   }
@@ -59,40 +56,32 @@ const parseHeadVersion = (version) => {
   }
 }
 
-const generateYearMonth = () => {
-  const now = new Date()
-  const year = now.getFullYear().toString().slice(-2) // ex) 25
-  const month = String(now.getMonth() + 1).padStart(2, '0') // ex) 08
-  return Number.parseInt(year + month)
-}
-
 const incrementVersion = (current, type) => {
   const parsed = parseHeadVersion(current)
-  const currentYearMonth = generateYearMonth()
 
   switch (type) {
     case 'clear':
       return {
         major: 1,
-        minor: currentYearMonth,
+        minor: 0,
         patch: 1,
       }
     case 'major':
-      // major 증가 시: minor를 이번달 버전으로, patch 초기화
+      // Reset minor and patch when major increases
       return {
         major: parsed.major + 1,
-        minor: currentYearMonth,
+        minor: 0,
         patch: 1,
       }
     case 'minor':
-      // minor 증가 시: patch 초기화
+      // Reset patch when minor increases
       return {
         major: parsed.major,
         minor: parsed.minor + 1,
         patch: 1,
       }
     case 'patch':
-      // patch 증가
+      // Increment patch
       return {
         major: parsed.major,
         minor: parsed.minor,
@@ -109,12 +98,12 @@ const formatHeadVersion = (versionObj) => {
 
 const main = async () => {
   try {
-    // clear의 경우 확인 메시지
+    // Confirmation message for clear
     if (versionType === 'clear') {
-      console.log(`⚠️  현재 버전 ${currentVersion}을(를) 초기화하려고 합니다.`)
-      console.log('이 작업은 되돌릴 수 없습니다.')
+      console.log(`⚠️  Attempting to reset current version ${currentVersion}.`)
+      console.log('This operation cannot be undone.')
 
-      // Node.js에서 동기적으로 입력 받기
+      // Get synchronous input in Node.js
       const rl = readline.createInterface({
         input: process.stdin,
         output: process.stdout,
@@ -139,14 +128,14 @@ const main = async () => {
     console.log(`새 버전: ${newVersion}`)
     console.log(`버전 타입: ${versionType}`)
 
-    // package.json 업데이트
+    // Update package.json
     packageJson.version = newVersion
     fs.writeFileSync(
       packageJsonPath,
       JSON.stringify(packageJson, null, 2) + '\n',
     )
 
-    // package-lock.json 업데이트 (존재하는 경우에만)
+    // Update package-lock.json (only if it exists)
     if (packageLock) {
       packageLock.version = newVersion
       if (packageLock.packages && packageLock.packages['']) {
@@ -162,7 +151,7 @@ const main = async () => {
       console.log('✅ package.json이 성공적으로 업데이트되었습니다.')
     }
 
-    // Git 커밋 생성 (선택사항)
+    // Create Git commit (optional)
     try {
       if (packageLock) {
         execSync(`git add package.json package-lock.json`)
@@ -188,5 +177,5 @@ const main = async () => {
   }
 }
 
-// 메인 함수 실행
+// Execute main function
 main()

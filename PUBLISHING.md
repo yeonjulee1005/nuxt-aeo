@@ -37,7 +37,7 @@ git remote -v
 원격 저장소가 없다면:
 
 ```bash
-git remote add origin https://github.com/dewdew/nuxt-aeo.git
+git remote add origin https://github.com/yeonjulee1005/nuxt-aeo.git
 ```
 
 ## npm 발행 단계

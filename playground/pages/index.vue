@@ -1,80 +1,58 @@
 <template>
   <div class="container">
-    <!-- Organization 정보 (전역 스키마에서 주입됨) -->
-    <div class="organization-card">
-      <h2 class="card-title">
-        프로젝트 정보 (전역 스키마)
-      </h2>
-      <div class="organization-info">
-        <h3>{{ organizationData.name }}</h3>
-        <p v-if="organizationData.description">
-          {{ organizationData.description }}
-        </p>
-        <a
-          v-if="organizationData.url"
-          :href="organizationData.url"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="org-link"
-        >
-          {{ organizationData.url }}
-        </a>
-      </div>
-      <p class="schema-note">
-        ℹ️ 이 정보는 nuxt.config.ts의 <code>aeo.schemas</code> 배열에서 자동으로 주입됩니다.
+    <!-- Information -->
+    <div class="info-box">
+      <h2>Semantic HTML Auto-injection Verification</h2>
+      <p>
+        <strong>✅ Global Schema Auto-injection:</strong> Schemas configured in the <code>aeo.schemas</code> array in nuxt.config.ts
+        are automatically injected into all pages. Semantic HTML is also automatically generated with the <code>renderHtml: true</code> option.
       </p>
+      <p>
+        <strong>✅ Visual Hiding:</strong> Generated semantic HTML is hidden with the <code>visually-hidden</code> class,
+        so it's not visible to users, but LLM crawlers (ChatGPT, Perplexity, etc.) and search engines can read it.
+      </p>
+      <h3>Verification Methods</h3>
+      <ol class="check-list">
+        <li>
+          <strong>Open Developer Tools (F12)</strong>
+        </li>
+        <li>
+          <strong>Check in Elements Tab:</strong>
+          <ul>
+            <li><code>&lt;script type="application/ld+json"&gt;</code> tag: Check JSON-LD schema</li>
+            <li><code>&lt;div class="nuxt-aeo-semantic-organization"&gt;</code>: Check Organization semantic HTML</li>
+            <li><code>&lt;div class="nuxt-aeo-semantic-person"&gt;</code>: Check Person semantic HTML</li>
+          </ul>
+        </li>
+        <li>
+          <strong>Check semantic HTML:</strong> Semantic HTML with the <code>visually-hidden</code> class applied
+          is automatically injected inside the body tag.
+        </li>
+      </ol>
+      <h3>Page-specific Schema</h3>
+      <p>
+        <strong>ItemList Schema:</strong> On this page, we use the <code>useSchema()</code> composable to
+        add ItemList Schema to the page head.
+      </p>
+      <h3>Quick Verification Method</h3>
+      <p>
+        Run the following commands in Developer Tools console:
+      </p>
+      <pre class="code-block"><code>// Check semantic HTML
+document.querySelectorAll('[class*="nuxt-aeo-semantic"]').forEach(el => {
+  console.log('✅ Found:', el.className, el.innerHTML.substring(0, 100) + '...')
+})
+
+// Check JSON-LD schema
+document.querySelectorAll('script[type="application/ld+json"]').forEach(script => {
+  console.log('✅ JSON-LD:', JSON.parse(script.innerHTML))
+})</code></pre>
     </div>
 
-    <!-- Person 정보 (전역 스키마에서 주입됨) -->
-    <div class="profile-card">
-      <h2 class="card-title">
-        작성자 정보 (전역 스키마)
-      </h2>
-      <div class="profile-header">
-        <div class="profile-info">
-          <h3 class="profile-name">
-            {{ personData.name }}
-          </h3>
-          <p
-            v-if="personData.alternateName"
-            class="profile-alternate-name"
-          >
-            {{ personData.alternateName }}
-          </p>
-          <p
-            v-if="personData.jobTitle"
-            class="profile-job-title"
-          >
-            {{ personData.jobTitle }}
-          </p>
-        </div>
-      </div>
-
-      <div
-        v-if="personData.knowsAbout && personData.knowsAbout.length > 0"
-        class="profile-section"
-      >
-        <h4>기술 스택</h4>
-        <div class="tags">
-          <span
-            v-for="skill in personData.knowsAbout"
-            :key="skill"
-            class="tag"
-          >
-            {{ skill }}
-          </span>
-        </div>
-      </div>
-
-      <p class="schema-note">
-        ℹ️ 이 정보는 nuxt.config.ts의 <code>aeo.schemas</code> 배열에서 자동으로 주입됩니다.
-      </p>
-    </div>
-
-    <!-- ItemList 예제 (페이지별 스키마) -->
+    <!-- ItemList Example (Page-specific Schema) -->
     <div class="list-card">
       <h2 class="card-title">
-        인기 기술 스택 (페이지별 스키마)
+        Popular Tech Stack (Page-specific Schema)
       </h2>
       <div class="list-section">
         <ol class="item-list">
@@ -99,52 +77,19 @@
           </li>
         </ol>
       </div>
-
-      <div class="info-box">
-        <h3>전역 스키마 (nuxt.config.ts에서 설정)</h3>
-        <p>
-          <strong>Organization & Person Schema:</strong> nuxt.config.ts의 <code>aeo.schemas</code> 배열에 설정된 스키마가
-          모든 페이지에 자동으로 주입됩니다.
-        </p>
-        <h3>페이지별 스키마</h3>
-        <p>
-          <strong>ItemList Schema:</strong> 이 페이지에서는 <code>useSchemaItemList()</code> composable을 사용하여
-          ItemList Schema를 페이지 head에 추가했습니다.
-        </p>
-        <p style="margin-top: 1rem;">
-          <strong>💡 개발자 도구 확인:</strong> 개발자 도구(F12)를 열어 Elements 탭에서
-          <code>&lt;script type="application/ld+json"&gt;</code> 태그를 확인하세요.
-          전역 스키마(Organization, Person)와 페이지별 스키마(ItemList)가 모두 포함되어 있습니다.
-        </p>
-      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-// Organization 데이터 (전역 스키마에서 주입됨 - nuxt.config.ts 참조)
-const organizationData = {
-  name: 'Nuxt AEO Project',
-  url: 'https://www.example.com',
-  description: 'AI Engine Optimization module for Nuxt',
-}
-
-// Person 데이터 (전역 스키마에서 주입됨 - nuxt.config.ts 참조)
-const personData = {
-  name: 'Yeonju Lee',
-  alternateName: 'Dewdew',
-  jobTitle: 'Software Engineer / CDO',
-  knowsAbout: ['Nuxt3', 'TypeScript', 'Supabase'],
-}
-
-// ItemList Schema 데이터 (페이지별로 추가)
+// ItemList Schema data (added per page)
 const itemListData = {
   name: 'Top 5 Popular Technologies',
   description: 'Most popular technologies in 2024',
   itemListElement: [
     {
       position: 1,
-      name: 'Nuxt 3',
+      name: 'Nuxt 4',
       item: 'https://nuxt.com',
     },
     {
@@ -170,8 +115,9 @@ const itemListData = {
   ],
 }
 
-// ItemList Schema를 페이지 head에 추가 (페이지별 스키마)
-// useSchema를 직접 사용하여 ItemList Schema 추가
+// Add ItemList Schema to page head (page-specific schema)
+// Use useSchema directly to add ItemList Schema
+// Also automatically generate semantic HTML with renderHtml: true
 useSchema({
   context: 'https://schema.org',
   type: 'ItemList',
@@ -183,6 +129,8 @@ useSchema({
     item: item.item,
     ...(item.name && { name: item.name }),
   })),
+  renderHtml: true, // Automatic semantic HTML generation
+  visuallyHidden: true, // Visually hide
 })
 </script>
 
@@ -196,140 +144,11 @@ useSchema({
   gap: 2rem;
 }
 
-.organization-card {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  padding: 2rem;
-  color: white;
-}
-
 .card-title {
   font-size: 1.25rem;
   font-weight: 600;
   margin: 0 0 1rem 0;
-  color: white;
-}
-
-.organization-info h3 {
-  font-size: 1.75rem;
-  font-weight: 700;
-  margin: 0 0 0.5rem 0;
-  color: white;
-}
-
-.organization-info p {
-  font-size: 1rem;
-  margin: 0 0 1rem 0;
-  opacity: 0.9;
-  line-height: 1.6;
-}
-
-.org-link {
-  color: white;
-  text-decoration: underline;
-  font-size: 0.9rem;
-  transition: opacity 0.2s;
-}
-
-.org-link:hover {
-  opacity: 0.8;
-}
-
-.schema-note {
-  margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.3);
-  font-size: 0.875rem;
-  opacity: 0.8;
-}
-
-.schema-note code {
-  background: rgba(255, 255, 255, 0.2);
-  padding: 0.125rem 0.375rem;
-  border-radius: 4px;
-  font-size: 0.875rem;
-}
-
-.profile-card {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  padding: 2rem;
-}
-
-.profile-header {
-  margin-bottom: 1.5rem;
-}
-
-.profile-info {
-  flex: 1;
-}
-
-.profile-name {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin: 0 0 0.5rem 0;
   color: #111827;
-}
-
-.profile-alternate-name {
-  font-size: 1.25rem;
-  color: #6b7280;
-  margin: 0 0 0.5rem 0;
-}
-
-.profile-job-title {
-  font-size: 1rem;
-  color: #4b5563;
-  margin: 0;
-}
-
-.profile-section {
-  margin-bottom: 2rem;
-}
-
-.profile-section h4 {
-  font-size: 1rem;
-  font-weight: 600;
-  margin: 0 0 0.75rem 0;
-  color: #111827;
-}
-
-.tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.tag {
-  background: #f3f4f6;
-  color: #374151;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  font-size: 0.875rem;
-  font-weight: 500;
-}
-
-.links {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.links li {
-  margin-bottom: 0.5rem;
-}
-
-.links a {
-  color: #2563eb;
-  text-decoration: none;
-  transition: color 0.2s;
-}
-
-.links a:hover {
-  color: #1d4ed8;
-  text-decoration: underline;
 }
 
 .info-box {
@@ -337,18 +156,25 @@ useSchema({
   border: 1px solid #bfdbfe;
   border-radius: 8px;
   padding: 1.5rem;
-  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.info-box h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 1rem 0;
+  color: #1e40af;
 }
 
 .info-box h3 {
   font-size: 1rem;
   font-weight: 600;
-  margin: 0 0 0.5rem 0;
+  margin: 1rem 0 0.5rem 0;
   color: #1e40af;
 }
 
-.info-box h3:not(:first-child) {
-  margin-top: 1rem;
+.info-box h3:first-of-type {
+  margin-top: 0.5rem;
 }
 
 .info-box p {
@@ -368,6 +194,46 @@ useSchema({
   border-radius: 4px;
   font-size: 0.875rem;
   font-family: 'Monaco', 'Courier New', monospace;
+}
+
+.check-list {
+  margin: 0.75rem 0;
+  padding-left: 1.5rem;
+  color: #1e40af;
+}
+
+.check-list li {
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+
+.check-list ul {
+  margin-top: 0.5rem;
+  padding-left: 1.5rem;
+  list-style-type: disc;
+}
+
+.check-list ul li {
+  margin-bottom: 0.25rem;
+}
+
+.code-block {
+  background: #1e293b;
+  color: #e2e8f0;
+  padding: 1rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 0.75rem 0;
+  font-family: 'Monaco', 'Courier New', monospace;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.code-block code {
+  background: transparent;
+  padding: 0;
+  color: inherit;
+  font-size: inherit;
 }
 
 .list-card {

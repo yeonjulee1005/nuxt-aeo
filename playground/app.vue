@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <!-- 네비게이션 헤더 -->
+    <!-- Navigation Header -->
     <header class="app-header">
       <nav class="app-nav">
         <div class="nav-content">
@@ -21,27 +21,48 @@
               Home
             </NuxtLink>
             <NuxtLink
-              to="/faq"
+              to="/person"
               class="nav-link"
               active-class="nav-link-active"
             >
-              FAQ
+              Person
+            </NuxtLink>
+            <NuxtLink
+              to="/organization"
+              class="nav-link"
+              active-class="nav-link-active"
+            >
+              Organization
+            </NuxtLink>
+            <NuxtLink
+              to="/itemlist"
+              class="nav-link"
+              active-class="nav-link-active"
+            >
+              ItemList
+            </NuxtLink>
+            <NuxtLink
+              to="/article"
+              class="nav-link"
+              active-class="nav-link-active"
+            >
+              Article
             </NuxtLink>
           </div>
         </div>
       </nav>
     </header>
 
-    <!-- 메인 컨텐츠 영역 -->
+    <!-- Main Content Area -->
     <main class="app-main">
       <NuxtPage />
     </main>
 
-    <!-- 푸터 -->
+    <!-- Footer -->
     <footer class="app-footer">
       <div class="footer-content">
         <p class="footer-text">
-          Nuxt AEO Module Playground - Schema.org JSON-LD 예제
+          Nuxt AEO Module Playground - Schema.org JSON-LD examples
         </p>
       </div>
     </footer>

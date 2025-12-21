@@ -1,0 +1,177 @@
+<template>
+  <div class="catalog-page">
+    <div class="container">
+      <h1>{{ catalog.name }}</h1>
+      <p class="description">
+        {{ catalog.description }}
+      </p>
+
+      <ol class="product-list">
+        <li
+          v-for="(product, index) in catalog.items"
+          :key="index"
+          class="product-item"
+        >
+          <div class="product-rank">
+            {{ product.position }}
+          </div>
+          <div class="product-info">
+            <h2>
+              <a :href="product.url">{{ product.name }}</a>
+            </h2>
+            <p v-if="product.description">
+              {{ product.description }}
+            </p>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+// Catalog data
+const catalog = {
+  name: 'Top 10 Best Selling Products',
+  description: 'Our most popular products this month based on sales data.',
+  items: [
+    {
+      position: 1,
+      name: 'Premium Wireless Headphones',
+      url: 'https://example.com/products/headphones',
+      description: 'High-quality wireless headphones with noise cancellation.',
+    },
+    {
+      position: 2,
+      name: 'Smart Watch Pro',
+      url: 'https://example.com/products/smartwatch',
+      description: 'Advanced smartwatch with health tracking features.',
+    },
+    {
+      position: 3,
+      name: 'Portable Laptop Stand',
+      url: 'https://example.com/products/laptop-stand',
+      description: 'Ergonomic laptop stand for better posture.',
+    },
+    {
+      position: 4,
+      name: 'Mechanical Keyboard',
+      url: 'https://example.com/products/keyboard',
+      description: 'RGB mechanical keyboard with customizable keys.',
+    },
+    {
+      position: 5,
+      name: 'USB-C Hub',
+      url: 'https://example.com/products/usb-hub',
+      description: 'Multi-port USB-C hub for laptops and tablets.',
+    },
+  ],
+}
+
+// Add ItemList Schema
+useSchema({
+  context: 'https://schema.org',
+  type: 'ItemList',
+  name: catalog.name,
+  description: catalog.description,
+  itemListElement: catalog.items.map(item => ({
+    type: 'ListItem',
+    position: item.position,
+    name: item.name,
+    item: item.url,
+  })),
+  renderHtml: true,
+  visuallyHidden: true,
+})
+</script>
+
+<style scoped>
+.catalog-page {
+  min-height: 100vh;
+  padding: 2rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 12px;
+  padding: 3rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: #1a202c;
+}
+
+.description {
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+  color: #718096;
+  line-height: 1.6;
+}
+
+.product-list {
+  list-style: none;
+  padding: 0;
+  counter-reset: rank;
+}
+
+.product-item {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid #e2e8f0;
+  counter-increment: rank;
+}
+
+.product-item:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.product-rank {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.product-info {
+  flex: 1;
+}
+
+.product-info h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: #2d3748;
+}
+
+.product-info h2 a {
+  color: #2d3748;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.product-info h2 a:hover {
+  color: #667eea;
+}
+
+.product-info p {
+  color: #718096;
+  line-height: 1.6;
+  margin: 0;
+}
+</style>

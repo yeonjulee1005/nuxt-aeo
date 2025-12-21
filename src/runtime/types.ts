@@ -1,11 +1,11 @@
 /**
- * Schema.org JSON-LD 타입 정의
- * AEO (AI Engine Optimization)를 위한 Schema 타입들
+ * Schema.org JSON-LD type definitions
+ * Schema types for AEO (AI Engine Optimization)
  */
 
 /**
- * 기본 Schema 인터페이스
- * 모든 Schema 타입은 이 인터페이스를 확장합니다.
+ * Base Schema interface
+ * All Schema types extend this interface.
  */
 export interface SchemaBase {
   '@context': 'https://schema.org' | string
@@ -14,7 +14,7 @@ export interface SchemaBase {
 }
 
 /**
- * FAQPage Schema 타입
+ * FAQPage Schema type
  */
 export interface FAQPageSchema extends SchemaBase {
   '@type': 'FAQPage'
@@ -32,25 +32,38 @@ export interface FAQPageSchema extends SchemaBase {
 }
 
 /**
- * 전역으로 주입할 스키마 설정
- * 모든 페이지에 자동으로 주입될 Schema 정보
- * context와 type을 사용하면 내부적으로 @context와 @type으로 자동 변환됩니다
+ * Global schema configuration to inject
+ * Schema information that will be automatically injected into all pages
+ * Using context and type will automatically convert them to @context and @type internally
  */
 export type GlobalSchema = {
   context?: 'https://schema.org' | string
   type: string
+  /**
+   * Whether to automatically generate semantic HTML
+   * @default true
+   * If true, semantic HTML is automatically generated based on schema data and injected into pages.
+   */
+  renderHtml?: boolean
+  /**
+   * Whether to visually hide
+   * @default true
+   * If true, generated semantic HTML is hidden with the visually-hidden class.
+   * LLM crawlers and search engines can read it, but it's not visible to users.
+   */
+  visuallyHidden?: boolean
   [key: string]: unknown
 }
 
 /**
- * Nuxt 모듈 설정 옵션 타입
+ * Nuxt module configuration options type
  */
 export interface ModuleOptions {
   /**
-   * 전역으로 주입할 스키마 배열
-   * 모든 페이지에 자동으로 주입될 Schema 정보들
-   * Person, Organization, WebSite 등 다양한 스키마 타입을 설정할 수 있습니다.
-   * context와 type을 사용하면 내부적으로 @context와 @type으로 자동 변환됩니다.
+   * Array of schemas to inject globally
+   * Schema information that will be automatically injected into all pages
+   * You can configure various schema types like Person, Organization, WebSite, etc.
+   * Using context and type will automatically convert them to @context and @type internally.
    *
    * @example
    * ```ts
@@ -70,16 +83,30 @@ export interface ModuleOptions {
   schemas?: GlobalSchema[]
 
   /**
-   * 자동 주입 여부
+   * Automatic injection
    * @default true
-   * false인 경우, schemas 배열이 있어도 주입하지 않습니다.
-   * schemas 배열이 없으면 기본 Project Schema가 주입됩니다.
+   * If false, schemas are not injected even if the schemas array exists.
+   * If schemas array is missing, a default Project Schema is injected.
    */
   autoInject?: boolean
+
+  /**
+   * Global semantic HTML auto-generation
+   * @default true
+   * If true, semantic HTML is automatically generated for global schemas and injected into pages.
+   */
+  renderHtml?: boolean
+
+  /**
+   * Global visual hiding
+   * @default true
+   * If true, generated semantic HTML is hidden with the visually-hidden class.
+   */
+  visuallyHidden?: boolean
 }
 
 /**
- * Nuxt Config 타입 확장
+ * Nuxt Config type extension
  */
 declare module '@nuxt/schema' {
   interface NuxtConfig {

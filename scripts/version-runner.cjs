@@ -3,15 +3,15 @@
 const { spawn } = require('node:child_process')
 const path = require('node:path')
 
-// 커맨드라인 인자 가져오기
+// Get command line arguments
 const versionType = process.argv[2]
 
 if (!versionType || !['major', 'minor', 'patch', 'clear'].includes(versionType)) {
-  console.error('사용법: node version-runner.js [major|minor|patch|clear]')
+  console.error('Usage: node version-runner.js [major|minor|patch|clear]')
   process.exit(1)
 }
 
-// CommonJS 버전으로 대체 실행하는 함수
+// Function to run fallback script in CommonJS version
 function runFallbackScript() {
   const cjsScript = path.join(__dirname, 'version-manager.cjs')
 
@@ -31,13 +31,13 @@ function runFallbackScript() {
   })
 }
 
-// 환경 감지 및 적절한 스크립트 실행
+// Detect environment and run appropriate script
 function runVersionManager() {
   const esmScript = path.join(__dirname, 'version-manager.js')
 
-  console.log('🔍 버전 관리 스크립트를 실행합니다...')
+  console.log('🔍 Running version management script...')
 
-  // ESM 버전 먼저 시도
+  // Try ESM version first
   const esmProcess = spawn('node', [esmScript, versionType], {
     stdio: 'inherit',
     cwd: process.cwd(),
