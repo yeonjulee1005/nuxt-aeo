@@ -29,12 +29,12 @@ function mapContentNavigation(navigation: ContentNavigationItem[] | null | undef
 }
 
 const { data: page } = await useAsyncData(`docs-${route.path}`, async () => {
-  // Skip if it's a Nuxt internal path or API route
+  // Skip if it's a Nuxt internal path (not content pages)
+  // Note: /api/ is a valid content path (e.g., /api/composables), so we don't skip it
   if (
     route.path.startsWith('/_nuxt/')
     || route.path.startsWith('/__nuxt')
-    || route.path.startsWith('/api/')
-    || route.path.startsWith('/_')
+    || route.path.startsWith('/_content')
   ) {
     return null
   }
