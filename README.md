@@ -1,5 +1,5 @@
-<!-- <a href="https://devtools.nuxt.com"><img width="1200" alt="Nuxt DevTools" src="https://github-production-user-asset-6210df.s3.amazonaws.com/904724/261577617-a10567bd-ad33-48cc-9bda-9e37dbe1929f.png"></a>
-<br> -->
+<a href="https://nuxt-aeo-docs.vercel.app"><img width="256" alt="Nuxt AEO" src="./docs/public/icon.svg"></a>
+<br>
 
 <h1>
 Nuxt AEO
