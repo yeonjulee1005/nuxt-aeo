@@ -52,10 +52,16 @@ const navItems = computed<NavigationMenuItem[]>(() => [
           class="flex items-center gap-2"
           prefetch
         >
-          <p class="font-bold text-2xl flex items-center gap-2">
+          <div class="font-bold text-2xl flex items-center gap-2">
+            <NuxtImg
+              src="/icon.svg"
+              alt="Nuxt AEO"
+              width="36"
+              height="36"
+            />
             <span class="text-highlighted">Nuxt</span>
             <span class="text-green-400">AEO</span>
-          </p>
+          </div>
         </NuxtLink>
       </template>
 

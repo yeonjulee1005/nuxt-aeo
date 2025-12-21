@@ -7,6 +7,7 @@ export default defineNuxtConfig({
     'nuxt-aeo',
     '@nuxt/devtools',
     '@vueuse/nuxt',
+    '@nuxt/image',
   ],
 
   devtools: { enabled: true },
@@ -71,5 +72,4 @@ export default defineNuxtConfig({
     renderHtml: true,
     visuallyHidden: true,
   },
-
 })
