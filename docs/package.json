@@ -7,20 +7,17 @@
     "build": "nuxi build",
     "generate": "nuxi generate",
     "preview": "nuxi preview",
-    "cleanup": "rm -rf .nuxt .output .data node_modules/.cache",
-    "vercel-build": "npm run build"
+    "cleanup": "rm -rf .nuxt .output .data node_modules/.cache"
   },
   "dependencies": {
     "@nuxt/content": "^3.0.0",
     "@nuxt/devtools": "^3.1.1",
     "@nuxt/ui": "^4.3.0",
     "@nuxtjs/mdc": "^0.19.1",
+    "better-sqlite3": "^12.5.0",
     "nuxt": "^4.2.2",
     "nuxt-aeo": "latest",
     "nuxt-studio": "^1.0.0-beta.1"
-  },
-  "optionalDependencies": {
-    "better-sqlite3": "^12.5.0"
   },
   "devDependencies": {
     "@iconify-json/simple-icons": "^1.2.63",
