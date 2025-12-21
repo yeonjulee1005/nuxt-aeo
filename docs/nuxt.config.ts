@@ -29,8 +29,15 @@ export default defineNuxtConfig({
     },
   },
 
+  // Route rules for static site generation
+  routeRules: {
+    // Prerender all pages at build time
+    '/**': { prerender: true },
+  },
+
   // Static site generation for Vercel
   nitro: {
+    preset: 'static',
     prerender: {
       crawlLinks: true,
       routes: ['/'],
