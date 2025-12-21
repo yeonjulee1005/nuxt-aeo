@@ -1,18 +1,19 @@
 /**
- * FAQPage Schema 헬퍼 composable
- * FAQPage Schema를 쉽게 추가할 수 있는 타입 안전한 헬퍼 함수
- * 시맨틱 HTML 자동 생성 기능 포함
+ * FAQPage Schema helper composable
+ * Type-safe helper function for easily adding FAQPage Schema
+ * Includes automatic semantic HTML generation
  */
 
 import { useSchema } from './useSchema'
 import { useHead } from '#app'
 
 /**
- * FAQPage Schema를 페이지 head에 추가하는 composable
+ * Composable that adds FAQPage Schema to page head
  *
- * @param data - FAQPage Schema 입력 데이터
- * @param data.mainEntity - FAQ 질문과 답변 배열
- * @param data.renderHtml - 시맨틱 HTML 자동 생성 여부 (기본값: true)
+ * @param data - FAQPage Schema input data
+ * @param data.mainEntity - Array of FAQ questions and answers
+ * @param data.renderHtml - Whether to automatically generate semantic HTML (default: true)
+ * @param data.visuallyHidden - Whether to visually hide (default: true)
  *
  * @example
  * ```ts
@@ -30,7 +31,9 @@ import { useHead } from '#app'
  *         text: 'You can install Nuxt using npm, yarn, or pnpm.'
  *       }
  *     }
- *   ]
+ *   ],
+ *   renderHtml: true,
+ *   visuallyHidden: true
  * })
  * ```
  */
@@ -41,15 +44,18 @@ export function useSchemaPage(data: {
     [key: string]: unknown
   }>
   renderHtml?: boolean
+  visuallyHidden?: boolean
   [key: string]: unknown
 }) {
-  // renderHtml 옵션 (기본값: true)
+  // renderHtml option (default: true)
   const renderHtml = data.renderHtml !== false
+  // visuallyHidden option (default: true)
+  const visuallyHidden = data.visuallyHidden !== false
 
-  // mainEntity와 renderHtml을 제외한 나머지 속성만 스프레드
-  const { mainEntity: _mainEntity, renderHtml: _renderHtml, ...restData } = data
+  // Spread only remaining properties excluding mainEntity, renderHtml, visuallyHidden
+  const { mainEntity: _mainEntity, renderHtml: _renderHtml, visuallyHidden: _visuallyHidden, ...restData } = data
 
-  // JSON-LD Schema 추가 (context, type을 사용)
+  // Add JSON-LD Schema (using context, type)
   useSchema({
     context: 'https://schema.org',
     type: 'FAQPage',
@@ -71,51 +77,54 @@ export function useSchemaPage(data: {
     }),
   })
 
-  // 시맨틱 HTML 자동 생성 (기본값: true)
+  // Automatic semantic HTML generation (default: true)
   if (renderHtml) {
     const semanticHtml = generateFAQPageSemanticHTML(data.mainEntity)
 
-    // 스타일 추가
-    useHead({
-      style: [
-        {
-          innerHTML: `
-            .nuxt-aeo-semantic-faq {
-              display: none !important;
-              visibility: hidden;
-              position: absolute;
-              width: 1px;
-              height: 1px;
-              overflow: hidden;
-              clip: rect(0, 0, 0, 0);
-              white-space: nowrap;
-            }
-          `,
-        },
-      ],
-    })
+    // Add visually-hidden CSS style (only once)
+    if (visuallyHidden) {
+      useHead({
+        style: [
+          {
+            innerHTML: `
+              .nuxt-aeo-visually-hidden {
+                position: absolute;
+                width: 1px;
+                height: 1px;
+                padding: 0;
+                margin: -1px;
+                overflow: hidden;
+                clip: rect(0, 0, 0, 0);
+                white-space: nowrap;
+                border: 0;
+              }
+            `,
+          },
+        ],
+      })
+    }
 
-    // 클라이언트 사이드에서 body에 시맨틱 HTML 주입
+    // Inject semantic HTML into body on client side
     if (import.meta.client) {
-      // onMounted와 유사하게 실행되도록 처리
+      // Execute similar to onMounted
       const injectSemanticHTML = () => {
         if (typeof document !== 'undefined') {
-          // 기존에 주입된 시맨틱 HTML이 있으면 제거
-          const existing = document.querySelector('.nuxt-aeo-semantic-faq')
+          // Remove existing injected semantic HTML if present
+          const existing = document.querySelector('.nuxt-aeo-semantic-faqpage')
           if (existing) {
             existing.remove()
           }
 
-          // 시맨틱 HTML을 body에 추가
+          // Add semantic HTML to body
           const semanticDiv = document.createElement('div')
-          semanticDiv.className = 'nuxt-aeo-semantic-faq'
+          semanticDiv.className = `nuxt-aeo-semantic-faqpage ${visuallyHidden ? 'nuxt-aeo-visually-hidden' : ''}`
           semanticDiv.setAttribute('aria-hidden', 'true')
           semanticDiv.innerHTML = semanticHtml
           document.body.appendChild(semanticDiv)
         }
       }
 
-      // DOM이 준비되면 실행
+      // Execute when DOM is ready
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', injectSemanticHTML)
       }
@@ -127,7 +136,7 @@ export function useSchemaPage(data: {
 }
 
 /**
- * FAQPage Schema 데이터를 기반으로 시맨틱 HTML 생성
+ * Generate semantic HTML based on FAQPage Schema data
  */
 function generateFAQPageSemanticHTML(mainEntity: Array<{
   name: string
@@ -158,7 +167,7 @@ ${questionsHtml}
 }
 
 /**
- * HTML 이스케이프 헬퍼 함수
+ * HTML escape helper function
  */
 function escapeHtml(text: string): string {
   const map: Record<string, string> = {

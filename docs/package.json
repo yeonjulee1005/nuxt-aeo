@@ -1,0 +1,28 @@
+{
+  "private": true,
+  "name": "nuxt-aeo-docs",
+  "type": "module",
+  "scripts": {
+    "dev": "nuxi dev",
+    "build": "nuxi build",
+    "generate": "nuxi generate",
+    "preview": "nuxi preview",
+    "cleanup": "rm -rf .nuxt .output .data node_modules/.cache"
+  },
+  "dependencies": {
+    "@nuxt/content": "^3.0.0",
+    "@nuxt/devtools": "^3.1.1",
+    "@nuxt/ui": "^4.3.0",
+    "@nuxtjs/mdc": "^0.19.1",
+    "better-sqlite3": "^12.5.0",
+    "nuxt": "^4.2.2",
+    "nuxt-studio": "^1.0.0-beta.1"
+  },
+  "devDependencies": {
+    "@iconify-json/simple-icons": "^1.2.63",
+    "@vueuse/nuxt": "^14.1.0",
+    "typescript": "~5.9.3",
+    "zod": "^3.23.8",
+    "zod-to-json-schema": "^3.23.5"
+  }
+}

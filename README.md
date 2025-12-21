@@ -11,56 +11,59 @@ Nuxt AEO
 [![Nuxt][nuxt-src]][nuxt-href]
 
 <p>
-Schema.org JSON-LD를 통해 AI Engine Optimization (AEO)을 지원하는 Nuxt 모듈입니다.
+A Nuxt module that implements AI Engine Optimization (AEO) using Schema.org JSON-LD structured data.
 </p>
 
 <p>
   <a href="/CHANGELOG.md">✨ Release Notes</a>
   <!-- | <a href="https://stackblitz.com/github/your-org/nuxt-aeo?file=playground%2Fapp.vue">🏀 Online playground</a> -->
-  <!-- | <a href="https://example.com">📖 Documentation</a> -->
+  | <a href="/docs">📖 Documentation</a>
 </p>
 
 <br>
 
-## AEO란?
+## What is AEO?
 
-**AI Engine Optimization (AEO)**는 AI 모델(ChatGPT, Claude, Perplexity 등)과 검색 엔진이 웹 콘텐츠를 더 잘 이해하고, 사용자의 질문에 정확한 답변을 제공할 수 있도록 구조화된 데이터를 최적화하는 기법입니다.
+**AI Engine Optimization (AEO)** is a technique for optimizing structured data so that AI models (ChatGPT, Claude, Perplexity, etc.) and search engines can better understand web content and provide accurate answers to user questions.
 
-이 모듈은 Schema.org JSON-LD 형식을 사용하여 웹페이지에 구조화된 데이터를 추가하고, `useHead()`를 통해 SSR 환경에서 자동으로 `<head>` 태그에 스크립트를 주입합니다. 이를 통해:
+This module uses Schema.org JSON-LD format to add structured data to web pages and automatically injects scripts into the `<head>` tag via `useHead()` in SSR environments. This enables:
 
-- 🤖 **AI 모델 최적화**: ChatGPT, Claude, Perplexity 등의 AI 모델이 콘텐츠를 크롤링하고 이해할 때 구조화된 데이터를 활용하여 더 정확한 정보를 제공하고 인용할 수 있습니다
-- 🔍 **검색 엔진 최적화**: Google, Bing 등의 검색 엔진이 Featured Snippets, Knowledge Graph 등에 콘텐츠를 표시할 수 있습니다
-- 📊 **답변 엔진 최적화**: 검색 엔진과 AI 모델이 사용자의 질문에 직접 답변을 제공할 수 있도록 최적화합니다
+- 🤖 **AI Model Optimization**: AI models like ChatGPT, Claude, and Perplexity can use structured data when crawling and understanding content to provide more accurate information and citations
+- 🔍 **Search Engine Optimization**: Search engines like Google and Bing can display your content in Featured Snippets, Knowledge Graph, etc.
+- 📊 **Answer Engine Optimization**: Optimize for search engines and AI models to provide direct answers to user questions
 
 ## Installation
 
-Nuxt 애플리케이션에 모듈을 설치하세요:
+Install the module in your Nuxt application:
 
 ```bash
 npx nuxi module add nuxt-aeo
 ```
 
-설치가 완료되면 Nuxt AEO를 사용할 수 있습니다 ✨
+Once installed, you can start using Nuxt AEO ✨
 
 ## Module Options
 
-`nuxt.config.ts`에서 모듈 옵션을 설정할 수 있습니다:
+You can configure module options in `nuxt.config.ts`:
 
-### 전역 스키마 설정
+### Global Schema Configuration
 
 ```ts
 // nuxt.config.ts
 export default defineNuxtConfig({
   modules: ['nuxt-aeo'],
   aeo: {
-    // 전역 스키마 배열 (모든 페이지에 자동 주입)
-    // Person, Organization, WebSite 등 다양한 스키마 타입을 설정할 수 있습니다
+    // Global schema array (automatically injected into all pages)
+    // You can configure various schema types like Person, Organization, WebSite, etc.
     schemas: [
       {
         type: 'Organization',
         name: 'My Company',
         url: 'https://www.example.com',
         logo: 'https://www.example.com/logo.png',
+        // Can be overridden with renderHtml, visuallyHidden options on individual schemas
+        renderHtml: true,
+        visuallyHidden: true,
       },
       {
         type: 'Person',
@@ -79,66 +82,75 @@ export default defineNuxtConfig({
         description: 'My awesome website',
       },
     ],
-    // 자동 주입 여부 (기본값: true)
-    // false인 경우, schemas 배열이 있어도 주입하지 않습니다
-    // schemas 배열이 없으면 기본 Project Schema가 주입됩니다
+    // Automatic injection (default: true)
+    // If false, schemas are not injected even if the schemas array exists
+    // If schemas array is missing, default Project Schema is injected (except when autoInject: false)
     autoInject: true,
+    // Global semantic HTML auto-generation (default: true)
+    renderHtml: true,
+    // Global visual hiding (default: true)
+    visuallyHidden: true,
   }
 })
 ```
 
-### 옵션 설명
+### Option Description
 
-- **`schemas`** (선택): 전역으로 주입할 스키마 배열. Person, Organization, WebSite 등 다양한 스키마 타입을 설정할 수 있습니다. 설정하면 모든 페이지에 자동으로 주입됩니다. `schemas` 배열이 없거나 비어있으면 기본 `Project` 스키마가 주입됩니다.
-- **`autoInject`** (선택, 기본값: `true`): 전역 스키마 정보의 자동 주입 여부를 제어합니다. `false`인 경우 아무것도 주입하지 않습니다.
+- **`schemas`** (Optional): Array of schemas to inject globally. You can configure various schema types like Person, Organization, WebSite, etc. When configured, they are automatically injected into all pages. If the `schemas` array is missing or empty, a default `Project` schema is injected.
+- **`autoInject`** (Optional, default: `true`): Controls whether global schema information is automatically injected. If `false`, schemas are not injected even if the `schemas` array exists. If the `schemas` array is missing, a default `Project` schema is injected (except when `autoInject: false`).
+- **`renderHtml`** (Optional, default: `true`): Controls whether semantic HTML is automatically generated globally. If `true`, semantic HTML is automatically generated for global schemas and injected into pages. Semantic HTML is used together with JSON-LD to optimize LLM crawling. Can be overridden with the `renderHtml` option on individual schemas.
+- **`visuallyHidden`** (Optional, default: `true`): Controls whether semantic HTML is visually hidden globally. If `true`, generated semantic HTML is hidden with the `visually-hidden` class. LLM crawlers and search engines can read it, but it's not visible to users. Can be overridden with the `visuallyHidden` option on individual schemas.
 
 ## Features
 
-- 🎯 **타입 안전성**: TypeScript로 모든 Schema 타입이 정의되어 있어 타입 체크가 가능합니다
-- 🚀 **SSR 지원**: `useHead()`를 사용하여 서버 사이드 렌더링 환경에서 완벽하게 작동합니다
-- 📦 **자동 Import**: Composable 함수들이 자동으로 import되어 별도 import 문이 필요 없습니다
-- 🔧 **유연한 설정**: 전역 스키마를 설정하거나 페이지별로 개별 Schema를 추가할 수 있습니다
-- 📚 **다양한 Schema 지원**: Person, Organization, FAQPage, ItemList, Article 등 모든 Schema.org 타입을 지원합니다
-- ✨ **간편한 사용법**: `context`와 `type`을 사용하면 내부적으로 `@context`와 `@type`으로 자동 변환되어 따옴표 없이 사용할 수 있습니다
-- 🎨 **시맨틱 HTML 자동 생성**: FAQPage Schema에 대해 시맨틱 HTML을 자동으로 생성하여 LLM 크롤링을 최적화합니다
+- 🎯 **Type Safety**: All Schema types are defined in TypeScript, enabling type checking
+- 🚀 **SSR Support**: Uses `useHead()` to work perfectly in server-side rendering environments
+- 📦 **Auto Import**: Composable functions are automatically imported, no separate import statements needed
+- 🔧 **Flexible Configuration**: Configure global schemas or add individual schemas per page
+- 📚 **Various Schema Support**: Supports all Schema.org types including Person, Organization, FAQPage, ItemList, Article, etc.
+- ✨ **Easy to Use**: Using `context` and `type` automatically converts them to `@context` and `@type` internally, so you can use them without quotes
+- 🎨 **Automatic Semantic HTML Generation**: Automatically generates semantic HTML based on schema data to optimize LLM crawling. Controllable at both global and individual schema levels
+- 👁️ **Visual Hiding**: Generated semantic HTML is hidden with the `visually-hidden` class, allowing crawlers to read it without affecting user experience
 
 ## Usage
 
 ### FAQPage Schema
 
-FAQ 페이지에 질문-답변 구조를 추가합니다. `renderHtml` 옵션(기본값: `true`)을 통해 시맨틱 HTML도 자동으로 생성됩니다:
+Add question-answer structures to FAQ pages. Semantic HTML is also automatically generated via the `renderHtml` option (default: `true`):
 
 ```vue
 <script setup lang="ts">
 useSchemaPage({
   mainEntity: [
     {
-      name: 'Nuxt AEO 모듈이란 무엇인가요?',
+      name: 'What is the Nuxt AEO module?',
       acceptedAnswer: {
-        text: 'Nuxt AEO 모듈은 Schema.org JSON-LD를 통해 AI Engine Optimization(AEO)을 지원하는 Nuxt 모듈입니다.',
+        text: 'Nuxt AEO is a Nuxt module that supports AI Engine Optimization (AEO) through Schema.org JSON-LD.',
       },
     },
     {
-      name: '어떤 Schema 타입을 지원하나요?',
+      name: 'What Schema types are supported?',
       acceptedAnswer: {
-        text: '현재 Person, FAQPage, ItemList, Article, TechArticle 등의 Schema 타입을 지원합니다.',
+        text: 'Currently supports Schema types such as Person, FAQPage, ItemList, Article, TechArticle, etc.',
       },
     },
   ],
-  // renderHtml: true (기본값) - 시맨틱 HTML 자동 생성
-  // JSON-LD와 함께 시맨틱 HTML이 생성되어 LLM 크롤링에 더 효과적입니다
+  // renderHtml: true (default) - Automatic semantic HTML generation
+  // visuallyHidden: true (default) - Visually hide
+  // Using JSON-LD together with semantic HTML is more effective for LLM crawling
 })
 </script>
 ```
 
-**시맨틱 HTML 자동 생성:**
-- `renderHtml: true` (기본값)인 경우, Schema 데이터를 기반으로 시맨틱 HTML이 자동 생성됩니다
-- 생성된 HTML은 `display: none`으로 숨겨져 있지만, HTML 소스에는 포함되어 LLM과 크롤러가 읽을 수 있습니다
-- JSON-LD와 시맨틱 HTML을 함께 사용하면 AI 모델의 콘텐츠 이해도가 향상됩니다
+**Automatic Semantic HTML Generation:**
+- When `renderHtml: true` (default), semantic HTML is automatically generated based on schema data
+- When `visuallyHidden: true` (default), generated HTML is hidden with the `visually-hidden` class
+- Generated HTML is not visible to users but is included in the HTML source for LLMs and crawlers to read
+- Using JSON-LD together with semantic HTML improves AI model content understanding
 
-### 범용 useSchema 함수
+### Universal useSchema Function
 
-직접 Schema 객체를 생성하여 사용할 수도 있습니다. `context`와 `type`을 사용하면 내부적으로 `@context`와 `@type`으로 자동 변환됩니다:
+You can also create Schema objects directly. Using `context` and `type` automatically converts them to `@context` and `@type` internally:
 
 ```vue
 <script setup lang="ts">
@@ -149,6 +161,8 @@ useSchema({
   name: 'Example Company',
   url: 'https://example.com',
   logo: 'https://example.com/logo.png',
+  // renderHtml: true (default) - Automatic semantic HTML generation
+  // visuallyHidden: true (default) - Visually hide
 })
 
 // ItemList Schema
@@ -171,6 +185,8 @@ useSchema({
       item: 'https://example.com/python',
     },
   ],
+  renderHtml: true,
+  visuallyHidden: true,
 })
 
 // Person Schema
@@ -180,15 +196,19 @@ useSchema({
   name: 'John Doe',
   jobTitle: 'Software Engineer',
   url: 'https://example.com',
+  // Control semantic HTML generation with renderHtml and visuallyHidden options
+  renderHtml: false, // Disable semantic HTML generation
 })
 </script>
 ```
 
-**참고:** `context`와 `type`은 내부적으로 `@context`와 `@type`으로 변환되므로, 따옴표 없이 일반 속성처럼 사용할 수 있습니다. 중첩된 객체도 자동으로 변환됩니다.
+**Note:** 
+- `context` and `type` are automatically converted to `@context` and `@type` internally, so you can use them without quotes like regular properties. Nested objects are also converted automatically.
+- Use the `renderHtml` and `visuallyHidden` options to control semantic HTML generation and visual hiding.
 
-## 확인 방법
+## Verification
 
-각 composable 함수를 사용하면 자동으로 페이지의 `<head>` 태그에 JSON-LD 스크립트가 추가됩니다. 개발자 도구(F12)를 열어 Elements 탭에서 다음과 같은 스크립트 태그를 확인할 수 있습니다:
+Using each composable function automatically adds a JSON-LD script to the page's `<head>` tag. Open Developer Tools (F12) and check the Elements tab for a script tag like this:
 
 ```html
 <script type="application/ld+json">
@@ -201,9 +221,14 @@ useSchema({
 </script>
 ```
 
-**참고:** `useSchema`에 `context`와 `type`을 전달하면, 내부적으로 `@context`와 `@type`으로 변환되어 JSON-LD에 주입됩니다.
+**Note:** 
+- When you pass `context` and `type` to `useSchema`, they are internally converted to `@context` and `@type` and injected into JSON-LD.
+- If semantic HTML is generated, you can check for elements with the `nuxt-aeo-semantic-*` class in Developer Tools.
+- You can use [Google's Rich Results Test](https://search.google.com/test/rich-results) to verify that your Schema is correctly recognized.
 
-또한 [Google의 Rich Results Test](https://search.google.com/test/rich-results)를 사용하여 Schema가 올바르게 인식되는지 확인할 수 있습니다.
+## Documentation
+
+For more detailed documentation, please refer to the [documentation site](/docs).
 
 ## Contribution
 

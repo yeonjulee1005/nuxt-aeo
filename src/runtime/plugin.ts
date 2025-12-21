@@ -1,38 +1,53 @@
 import { defineNuxtPlugin, useRuntimeConfig } from '#app'
 import { useSchema } from './composables/useSchema'
-import type { GlobalSchema } from './types'
+import type { GlobalSchema, ModuleOptions } from './types'
 
 /**
- * AEO (AI Engine Optimization) 모듈 플러그인
- * 전역 스키마 정보를 자동으로 주입하는 플러그인
+ * AEO (AI Engine Optimization) module plugin
+ * Plugin that automatically injects global schema information
+ * Includes automatic semantic HTML generation
  */
 export default defineNuxtPlugin(() => {
   const config = useRuntimeConfig()
-  const aeoConfig = config.public.aeo as {
+  const aeoConfig = config.public.aeo as ModuleOptions & {
     schemas?: GlobalSchema[]
-    autoInject?: boolean
   }
 
-  // autoInject가 false이면 주입하지 않음
+  // Don't inject if autoInject is false
   if (aeoConfig?.autoInject === false) {
     return
   }
 
-  // schemas 배열이 있으면 주입
+  // Global renderHtml, visuallyHidden options (default: true)
+  const globalRenderHtml = aeoConfig?.renderHtml !== false
+  const globalVisuallyHidden = aeoConfig?.visuallyHidden !== false
+
+  // Inject if schemas array exists
   if (aeoConfig?.schemas && Array.isArray(aeoConfig.schemas) && aeoConfig.schemas.length > 0) {
     for (const schema of aeoConfig.schemas) {
-      // context가 없으면 기본값 추가
+      // Use individual schema's renderHtml, visuallyHidden options or global options
+      const renderHtml = schema.renderHtml !== undefined ? schema.renderHtml : globalRenderHtml
+      const visuallyHidden = schema.visuallyHidden !== undefined ? schema.visuallyHidden : globalVisuallyHidden
+
+      // Spread only remaining properties excluding renderHtml, visuallyHidden
+      const { renderHtml: _renderHtml, visuallyHidden: _visuallyHidden, ...schemaData } = schema
+
+      // Add default value if context is missing
       useSchema({
         context: 'https://schema.org',
-        ...schema,
+        ...schemaData,
+        renderHtml,
+        visuallyHidden,
       })
     }
   }
   else {
-    // schemas가 없으면 기본 Project Schema 주입
+    // Inject default Project Schema if schemas is missing
     useSchema({
       context: 'https://schema.org',
       type: 'Project',
+      renderHtml: globalRenderHtml,
+      visuallyHidden: globalVisuallyHidden,
     })
   }
 })
