@@ -1,5 +1,18 @@
 export default defineNuxtConfig({
   modules: ['nuxt-aeo'],
+  
+  app: {
+    head: {
+      link: [
+        {
+          rel: 'icon',
+          type: 'image/svg+xml',
+          href: '/icon.svg',
+        },
+      ],
+    },
+  },
+
   devtools: { enabled: true },
   /**
    * AEO (AI Engine Optimization) module configuration

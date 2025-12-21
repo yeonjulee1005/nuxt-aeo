@@ -10,6 +10,18 @@ export default defineNuxtConfig({
     '@nuxt/image',
   ],
 
+  app: {
+    head: {
+      link: [
+        {
+          rel: 'icon',
+          type: 'image/svg+xml',
+          href: '/icon.svg',
+        },
+      ],
+    },
+  },
+
   devtools: { enabled: true },
 
   css: ['~/assets/css/main.css'],
