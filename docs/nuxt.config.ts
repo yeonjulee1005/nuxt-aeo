@@ -14,7 +14,7 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
 
   colorMode: {
-    preference: 'light',
+    preference: 'dark',
   },
 
   // Nuxt Content configuration
@@ -34,6 +34,10 @@ export default defineNuxtConfig({
     prerender: {
       crawlLinks: true,
       routes: ['/'],
+      failOnError: false,
+    },
+    output: {
+      publicDir: '.output/public',
     },
   },
 
