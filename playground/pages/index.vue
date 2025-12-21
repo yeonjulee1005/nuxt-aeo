@@ -137,27 +137,27 @@ useSchema({
 useSchemaPage({
   mainEntity: [
     {
-      name: 'Nuxt AEO 모듈의 주요 기능은?',
+      name: 'What are the main features of the Nuxt AEO module?',
       acceptedAnswer: {
-        text: 'Nuxt AEO 모듈은 Schema.org JSON-LD 구조화된 데이터를 자동으로 생성하고, Semantic HTML을 자동 주입하여 AI 모델과 검색 엔진이 콘텐츠를 더 잘 이해할 수 있도록 도와줍니다. 전역 스키마 설정과 페이지별 스키마 설정을 모두 지원하며, renderHtml 옵션을 통해 시각적으로 숨겨진 Semantic HTML을 자동 생성합니다.',
+        text: 'The Nuxt AEO module automatically generates Schema.org JSON-LD structured data and automatically injects Semantic HTML to help AI models and search engines better understand content. It supports both global schema configuration and page-specific schema configuration, and automatically generates visually hidden Semantic HTML through the renderHtml option.',
       },
     },
     {
-      name: 'Semantic HTML이 자동 생성되나요?',
+      name: 'Is Semantic HTML automatically generated?',
       acceptedAnswer: {
-        text: '네, renderHtml 옵션을 true로 설정하면 Schema.org 데이터에 기반한 Semantic HTML이 자동으로 생성됩니다. 생성된 HTML은 visuallyHidden 옵션을 통해 시각적으로 숨겨지지만, LLM 크롤러(ChatGPT, Perplexity 등)와 검색 엔진은 이를 읽을 수 있습니다.',
+        text: 'Yes, when the renderHtml option is set to true, Semantic HTML based on Schema.org data is automatically generated. The generated HTML is visually hidden through the visuallyHidden option, but LLM crawlers (ChatGPT, Perplexity, etc.) and search engines can read it.',
       },
     },
     {
-      name: '전역 스키마는 어떻게 설정하나요?',
+      name: 'How do I configure global schemas?',
       acceptedAnswer: {
-        text: 'nuxt.config.ts 파일의 aeo.schemas 배열에 스키마를 설정하면 모든 페이지에 자동으로 주입됩니다. 전역 스키마는 Organization, Person 등 사이트 전체에 적용되는 정보에 사용하며, 페이지별 스키마는 useSchema() 또는 useSchemaPage()를 사용하여 개별 페이지에 추가할 수 있습니다.',
+        text: 'Configure schemas in the aeo.schemas array in the nuxt.config.ts file, and they will be automatically injected into all pages. Global schemas are used for information that applies to the entire site, such as Organization and Person. Page-specific schemas can be added to individual pages using useSchema() or useSchemaPage().',
       },
     },
     {
-      name: 'useSchemaPage()와 useSchema()의 차이는?',
+      name: 'What is the difference between useSchemaPage() and useSchema()?',
       acceptedAnswer: {
-        text: 'useSchema()는 일반적인 Schema.org 스키마(Person, Organization, Article 등)를 추가하는 데 사용되며, useSchemaPage()는 페이지 메타데이터와 FAQPage 스키마를 추가하는 데 사용됩니다. useSchemaPage()는 FAQPage Schema를 자동으로 생성하여 AI 모델이 페이지의 주요 질문과 답변을 이해할 수 있도록 도와줍니다.',
+        text: 'useSchema() is used to add general Schema.org schemas (Person, Organization, Article, etc.), while useSchemaPage() is used to add page metadata and FAQPage schema. useSchemaPage() automatically generates FAQPage Schema to help AI models understand the main questions and answers on the page.',
       },
     },
   ],

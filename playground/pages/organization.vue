@@ -82,27 +82,27 @@ useSchema({
 useSchemaPage({
   mainEntity: [
     {
-      name: 'Organization Schema는 언제 사용하나요?',
+      name: 'When should I use Organization Schema?',
       acceptedAnswer: {
-        text: 'Organization Schema는 회사 소개 페이지, 조직 정보 페이지, About 페이지 등에서 사용됩니다. 회사나 조직의 이름, 설명, 로고, 웹사이트 URL, 연락처 정보, 소셜 미디어 링크 등을 구조화된 데이터로 제공하여 검색 엔진과 AI 모델이 조직 정보를 더 잘 이해할 수 있도록 합니다.',
+        text: 'Organization Schema is used on company introduction pages, organization information pages, About pages, etc. It provides structured data about the company or organization\'s name, description, logo, website URL, contact information, social media links, etc., to help search engines and AI models better understand organization information.',
       },
     },
     {
-      name: '필수 속성은 무엇인가요?',
+      name: 'What are the required properties?',
       acceptedAnswer: {
-        text: 'Organization Schema에서 필수 속성은 name입니다. 하지만 더 완전한 정보를 제공하기 위해 url, description, logo, sameAs(소셜 미디어 링크), contactPoint(연락처 정보) 등을 추가하는 것이 좋습니다. 특히 contactPoint를 통해 고객 지원, 영업, 일반 문의 등의 연락처를 구분하여 제공할 수 있습니다.',
+        text: 'The required property in Organization Schema is name. However, it is recommended to add url, description, logo, sameAs (social media links), contactPoint (contact information), etc., to provide more complete information. In particular, you can distinguish and provide contact information for customer support, sales, general inquiries, etc., through contactPoint.',
       },
     },
     {
-      name: 'contactPoint는 어떻게 설정하나요?',
+      name: 'How do I configure contactPoint?',
       acceptedAnswer: {
-        text: 'contactPoint는 ContactPoint 타입의 객체로 설정하며, telephone(전화번호), email(이메일), contactType(연락처 유형) 등의 속성을 포함합니다. contactType은 "Customer Service", "Sales", "Technical Support" 등으로 구분할 수 있으며, 여러 연락처를 배열로 제공할 수도 있습니다.',
+        text: 'contactPoint is configured as an object of type ContactPoint and includes properties such as telephone (phone number), email, and contactType (contact type). contactType can be distinguished as "Customer Service", "Sales", "Technical Support", etc., and you can also provide multiple contacts as an array.',
       },
     },
     {
-      name: 'Organization Schema를 전역으로 설정할 수 있나요?',
+      name: 'Can I configure Organization Schema globally?',
       acceptedAnswer: {
-        text: '네, nuxt.config.ts의 aeo.schemas 배열에 Organization Schema를 추가하면 모든 페이지에 자동으로 주입됩니다. 이는 사이트 전체에 공통으로 적용되는 조직 정보(회사명, 로고, 기본 연락처 등)를 설정할 때 유용합니다.',
+        text: 'Yes, adding Organization Schema to the aeo.schemas array in nuxt.config.ts will automatically inject it into all pages. This is useful when setting organization information (company name, logo, default contact, etc.) that applies to the entire site.',
       },
     },
   ],
