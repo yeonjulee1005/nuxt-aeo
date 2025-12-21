@@ -83,6 +83,36 @@ useSchema({
   renderHtml: true,
   visuallyHidden: true,
 })
+
+// Add FAQPage Schema for ItemList Schema-related questions
+useSchemaPage({
+  mainEntity: [
+    {
+      name: 'ItemList Schema는 언제 사용하나요?',
+      acceptedAnswer: {
+        text: 'ItemList Schema는 순위가 있는 목록, 상품 목록, 레시피 재료 목록, 체크리스트 등 순서가 있는 항목 목록을 표현할 때 사용됩니다. 예를 들어 "인기 상품 Top 10", "기술 스택 목록", "할 일 목록" 등을 구조화된 데이터로 제공하여 AI 모델과 검색 엔진이 목록의 순서와 각 항목의 정보를 이해할 수 있도록 합니다.',
+      },
+    },
+    {
+      name: 'position 속성은 필수인가요?',
+      acceptedAnswer: {
+        text: '네, ItemList의 각 항목(ListItem)에서 position 속성은 필수입니다. position은 항목의 순서를 나타내는 숫자로, 1부터 시작합니다. 이를 통해 AI 모델과 검색 엔진이 목록의 순서를 정확히 이해할 수 있습니다.',
+      },
+    },
+    {
+      name: '어떤 용도로 사용할 수 있나요?',
+      acceptedAnswer: {
+        text: 'ItemList Schema는 다양한 용도로 사용할 수 있습니다: 인기 상품 목록, 베스트셀러 목록, 기술 스택 목록, 레시피 재료 목록, 체크리스트, 랭킹 페이지 등 순서가 있는 모든 목록에 적용할 수 있습니다. 각 항목은 URL, 이름, 설명 등의 추가 정보를 포함할 수 있습니다.',
+      },
+    },
+    {
+      name: 'ItemList의 각 항목에 추가 정보를 포함할 수 있나요?',
+      acceptedAnswer: {
+        text: '네, 각 ListItem 항목에는 position 외에도 name(이름), item(URL 또는 객체), description(설명) 등의 속성을 추가할 수 있습니다. item 속성에는 단순 URL 문자열뿐만 아니라 다른 Schema 객체(예: Product, Article 등)를 포함할 수도 있어 더 풍부한 정보를 제공할 수 있습니다.',
+      },
+    },
+  ],
+})
 </script>
 
 <style scoped>
