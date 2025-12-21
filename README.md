@@ -15,7 +15,7 @@ A Nuxt module that implements AI Engine Optimization (AEO) using Schema.org JSON
 </p>
 
 <p>
-  <a href="/CHANGELOG.md">✨ Release Notes</a>
+  <a href="https://github.com/yeonjulee1005/nuxt-aeo/releases">✨ Release Notes</a>
   <!-- | <a href="https://stackblitz.com/github/your-org/nuxt-aeo?file=playground%2Fapp.vue">🏀 Online playground</a> -->
   | <a href="/docs">📖 Documentation</a>
 </p>
@@ -37,7 +37,7 @@ This module uses Schema.org JSON-LD format to add structured data to web pages a
 Install the module in your Nuxt application:
 
 ```bash
-npx nuxi module add nuxt-aeo
+bun add nuxt-aeo
 ```
 
 Once installed, you can start using Nuxt AEO ✨

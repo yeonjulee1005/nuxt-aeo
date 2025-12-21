@@ -5,7 +5,7 @@ export default defineNuxtConfig({
     '@nuxt/content',
     '@nuxtjs/mdc',
     'nuxt-studio',
-    '../src/module',
+    'nuxt-aeo',
     '@nuxt/devtools',
     '@vueuse/nuxt',
   ],
