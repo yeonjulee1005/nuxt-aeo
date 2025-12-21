@@ -1,5 +1,4 @@
 export default defineNuxtConfig({
-  // Add local nuxt-aeo module
   modules: [
     '@nuxt/ui',
     '@nuxt/content',
@@ -11,6 +10,7 @@ export default defineNuxtConfig({
   ],
 
   devtools: { enabled: true },
+
   css: ['~/assets/css/main.css'],
 
   colorMode: {
@@ -26,6 +26,14 @@ export default defineNuxtConfig({
           searchDepth: 3,
         },
       },
+    },
+  },
+
+  // Static site generation for Vercel
+  nitro: {
+    prerender: {
+      crawlLinks: true,
+      routes: ['/'],
     },
   },
 
