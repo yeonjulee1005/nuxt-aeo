@@ -17,4 +17,13 @@ export default createConfigForNuxt({
 })
   .append(
     // your custom flat config here...
+    {
+      files: ['docs/**/*.vue', 'playground/**/*.vue'],
+      rules: {
+        // Nuxt layouts and pages use file names as component names
+        'vue/multi-word-component-names': 'off',
+        // v-html is used for rendering article content
+        'vue/no-v-html': 'warn',
+      },
+    },
   )
