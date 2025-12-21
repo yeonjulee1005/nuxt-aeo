@@ -54,7 +54,7 @@ const navItems = computed<NavigationMenuItem[]>(() => [
         >
           <div class="font-bold text-2xl flex items-center gap-2">
             <NuxtImg
-              src="/icon.svg"
+              src="https://raw.githubusercontent.com/yeonjulee1005/nuxt-aeo/main/.github/assets/icon.svg"
               alt="Nuxt AEO"
               width="36"
               height="36"
