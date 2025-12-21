@@ -36,9 +36,6 @@ export default defineNuxtConfig({
       routes: ['/'],
       failOnError: false,
     },
-    output: {
-      publicDir: '.output/public',
-    },
   },
 
   // AEO module configuration
