@@ -43,14 +43,15 @@
 
 <script setup lang="ts">
 // Organization data
+// Note: Mix of absolute and relative URLs to demonstrate URL normalization
 const organization = {
   name: 'Example Company',
-  url: 'https://example.com',
+  url: '/', // Relative URL - will be normalized to absolute
   description: 'Example Company provides the best services.',
-  logo: 'https://example.com/logo.png',
+  logo: '/images/logo.png', // Relative URL - will be normalized to absolute
   sameAs: [
-    'https://github.com/example',
-    'https://twitter.com/example',
+    'https://github.com/example', // Absolute URL - used as-is
+    '/social/twitter', // Relative URL - will be normalized to absolute
   ],
   contactPoint: {
     telephone: '+1-555-123-4567',
@@ -60,6 +61,10 @@ const organization = {
 }
 
 // Add Organization Schema
+// Note: useSchema() automatically normalizes URLs:
+// - Absolute URLs (http:// or https://) are used as-is
+// - Relative URLs are combined with the base URL (from useRequestURL() or app.baseURL)
+// - URL normalization applies recursively to nested objects and arrays
 useSchema({
   context: 'https://schema.org',
   type: 'Organization',
@@ -79,7 +84,8 @@ useSchema({
 })
 
 // Add FAQPage Schema for Organization Schema-related questions
-useSchemaPage({
+// Note: useSchemaFaq() also automatically normalizes URLs like useSchema()
+useSchemaFaq({
   mainEntity: [
     {
       name: 'When should I use Organization Schema?',

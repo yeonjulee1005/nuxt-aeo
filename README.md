@@ -109,6 +109,7 @@ export default defineNuxtConfig({
 - 🔧 **Flexible Configuration**: Configure global schemas or add individual schemas per page
 - 📚 **Various Schema Support**: Supports all Schema.org types including Person, Organization, FAQPage, ItemList, Article, etc.
 - ✨ **Easy to Use**: Using `context` and `type` automatically converts them to `@context` and `@type` internally, so you can use them without quotes
+- 🔗 **Automatic URL Normalization**: Automatically normalizes relative URLs to absolute URLs in `url`, `image`, `logo`, and `item` properties, ensuring consistent URL formatting for AI models and search engines
 - 🎨 **Automatic Semantic HTML Generation**: Automatically generates semantic HTML based on schema data to optimize LLM crawling. Controllable at both global and individual schema levels
 - 👁️ **Visual Hiding**: Generated semantic HTML is hidden with the `visually-hidden` class, allowing crawlers to read it without affecting user experience
 
@@ -120,7 +121,7 @@ Add question-answer structures to FAQ pages. Semantic HTML is also automatically
 
 ```vue
 <script setup lang="ts">
-useSchemaPage({
+useSchemaFaq({
   mainEntity: [
     {
       name: 'What is the Nuxt AEO module?',
@@ -148,6 +149,12 @@ useSchemaPage({
 - Generated HTML is not visible to users but is included in the HTML source for LLMs and crawlers to read
 - Using JSON-LD together with semantic HTML improves AI model content understanding
 
+**URL Normalization:**
+- `useSchemaFaq()` automatically normalizes all `url`, `image`, `logo`, and `item` properties to absolute URLs
+- Relative URLs are combined with the base URL (from `useRequestURL()` or `app.baseURL`)
+- Absolute URLs (starting with `http://` or `https://`) remain unchanged
+- This ensures consistent URL formatting for AI models and search engines
+
 ### Universal useSchema Function
 
 You can also create Schema objects directly. Using `context` and `type` automatically converts them to `@context` and `@type` internally:
@@ -160,7 +167,7 @@ useSchema({
   type: 'Organization',
   name: 'Example Company',
   url: 'https://example.com',
-  logo: 'https://example.com/logo.png',
+  logo: '/logo.png', // Relative URL from /public folder - automatically normalized to absolute URL
   // renderHtml: true (default) - Automatic semantic HTML generation
   // visuallyHidden: true (default) - Visually hide
 })
@@ -176,26 +183,33 @@ useSchema({
       type: 'ListItem',
       position: 1,
       name: 'JavaScript',
-      item: 'https://example.com/javascript',
+      item: '/languages/javascript', // Relative URL - automatically normalized to absolute
     },
     {
       type: 'ListItem',
       position: 2,
       name: 'Python',
-      item: 'https://example.com/python',
+      item: 'https://www.python.org', // Absolute URL - used as-is
+    },
+    {
+      type: 'ListItem',
+      position: 3,
+      name: 'TypeScript',
+      item: '/languages/typescript', // Relative URL - automatically normalized to absolute
     },
   ],
   renderHtml: true,
   visuallyHidden: true,
 })
 
-// Person Schema
+// Person Schema with nested object
 useSchema({
   context: 'https://schema.org',
   type: 'Person',
   name: 'John Doe',
   jobTitle: 'Software Engineer',
-  url: 'https://example.com',
+  url: '/about', // Relative URL - automatically normalized to absolute URL
+  image: '/images/profile.jpg', // Relative URL from /public folder - automatically normalized
   // Control semantic HTML generation with renderHtml and visuallyHidden options
   renderHtml: false, // Disable semantic HTML generation
 })
@@ -205,6 +219,7 @@ useSchema({
 **Note:** 
 - `context` and `type` are automatically converted to `@context` and `@type` internally, so you can use them without quotes like regular properties. Nested objects are also converted automatically.
 - Use the `renderHtml` and `visuallyHidden` options to control semantic HTML generation and visual hiding.
+- **URL Normalization**: All `url`, `image`, `logo`, and `item` properties in the schema are automatically normalized to absolute URLs. Relative URLs are combined with the base URL (from `useRequestURL()` or `app.baseURL`), while absolute URLs (starting with `http://` or `https://`) remain unchanged. This normalization applies recursively to nested objects and arrays (e.g., `author.url`, `publisher.logo.url`, `sameAs[]`, `itemListElement[].item`).
 
 ## Verification
 
@@ -232,7 +247,7 @@ This page includes FAQPage Schema to help AI models and search engines understan
 
 ```vue
 <script setup lang="ts">
-useSchemaPage({
+useSchemaFaq({
   mainEntity: [
     {
       name: 'What is the Nuxt AEO module?',
@@ -249,13 +264,13 @@ useSchemaPage({
     {
       name: 'Can I use it immediately after installation?',
       acceptedAnswer: {
-        text: 'Yes! Once you install the module with `bun add nuxt-aeo` and add it to your `nuxt.config.ts`, you can start using it immediately. If you don\'t configure global schemas, a default Project schema will be automatically injected. You can also add schemas per page using useSchema() or useSchemaPage() composables.',
+        text: 'Yes! Once you install the module with `bun add nuxt-aeo` and add it to your `nuxt.config.ts`, you can start using it immediately. If you don\'t configure global schemas, a default Project schema will be automatically injected. You can also add schemas per page using useSchema() or useSchemaFaq() composables.',
       },
     },
     {
-      name: 'What is the difference between useSchemaPage() and useSchema()?',
+      name: 'What is the difference between useSchemaFaq() and useSchema()?',
       acceptedAnswer: {
-        text: 'useSchemaPage() is a specialized composable for FAQPage Schema that provides a simpler API for adding question-answer structures. useSchema() is a universal composable that can create any Schema.org type. Both support automatic semantic HTML generation and visual hiding options.',
+        text: 'useSchemaFaq() is a specialized composable for FAQPage Schema that provides a simpler API for adding question-answer structures. useSchema() is a universal composable that can create any Schema.org type. Both support automatic semantic HTML generation and visual hiding options.',
       },
     },
     {
@@ -277,7 +292,7 @@ useSchemaPage({
 
 - **Can I use it immediately after installation?**: Yes! Once installed and added to your config, you can start using it immediately. A default Project schema is automatically injected if no global schemas are configured.
 
-- **What is the difference between useSchemaPage() and useSchema()?**: useSchemaPage() is specialized for FAQPage Schema with a simpler API, while useSchema() is a universal composable for any Schema.org type.
+- **What is the difference between useSchemaFaq() and useSchema()?**: useSchemaFaq() is specialized for FAQPage Schema with a simpler API, while useSchema() is a universal composable for any Schema.org type.
 
 - **How does automatic semantic HTML generation work?**: When enabled (default), semantic HTML is automatically generated from schema data and hidden from users but accessible to LLMs and crawlers, improving AI model content understanding.
 

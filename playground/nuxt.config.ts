@@ -1,6 +1,8 @@
 export default defineNuxtConfig({
   modules: ['nuxt-aeo'],
-  
+
+  devtools: { enabled: true },
+
   app: {
     head: {
       link: [
@@ -12,8 +14,6 @@ export default defineNuxtConfig({
       ],
     },
   },
-
-  devtools: { enabled: true },
   /**
    * AEO (AI Engine Optimization) module configuration
    * Supports AI model and search engine optimization through Schema.org JSON-LD.

@@ -73,22 +73,23 @@
 
 <script setup lang="ts">
 // Article data
+// Note: Mix of absolute and relative URLs to demonstrate URL normalization
 const article = {
   headline: 'Getting Started with Nuxt AEO Module',
   description: 'Learn how to implement AI Engine Optimization in your Nuxt application using Schema.org JSON-LD structured data.',
-  image: 'https://example.com/images/nuxt-aeo.jpg',
+  image: '/images/nuxt-aeo.jpg', // Relative URL - will be normalized to absolute
   datePublished: '2024-01-15',
   dateModified: '2024-01-20',
   author: {
     name: 'Yeonju Lee',
     jobTitle: 'Software Engineer / CDO',
-    image: 'https://example.com/authors/yeonju.jpg',
-    url: 'https://example.com/authors/yeonju',
+    image: '/authors/yeonju.jpg', // Relative URL - will be normalized to absolute
+    url: 'https://example.com/authors/yeonju', // Absolute URL - used as-is
   },
   publisher: {
     name: 'Nuxt AEO Project',
     logo: {
-      url: 'https://example.com/logo.png',
+      url: '/logo.png', // Relative URL - will be normalized to absolute
     },
   },
   keywords: ['Nuxt', 'AEO', 'Schema.org', 'SEO', 'AI'],
@@ -122,6 +123,10 @@ function formatDate(dateString: string): string {
 }
 
 // Add Article Schema
+// Note: useSchema() automatically normalizes URLs:
+// - Absolute URLs (http:// or https://) are used as-is
+// - Relative URLs are combined with the base URL (from useRequestURL() or app.baseURL)
+// - URL normalization applies recursively to nested objects (e.g., author.url, publisher.logo.url)
 useSchema({
   context: 'https://schema.org',
   type: 'Article',
@@ -152,7 +157,8 @@ useSchema({
 })
 
 // Add FAQPage Schema for Article Schema-related questions
-useSchemaPage({
+// Note: useSchemaFaq() also automatically normalizes URLs like useSchema()
+useSchemaFaq({
   mainEntity: [
     {
       name: 'When should I use Article Schema?',

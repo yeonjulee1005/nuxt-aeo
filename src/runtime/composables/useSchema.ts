@@ -4,7 +4,112 @@
  * Includes automatic semantic HTML generation
  */
 
-import { useHead } from '#app'
+import { useHead, useRequestURL, useRuntimeConfig } from '#app'
+
+/**
+ * Get base URL for URL normalization
+ * Uses useRequestURL() origin if available, otherwise falls back to app.baseURL
+ */
+function getBaseUrl(): string {
+  try {
+    // Try to use useRequestURL() if available (SSR/client)
+    const requestUrl = useRequestURL()
+    if (requestUrl?.origin) {
+      return requestUrl.origin
+    }
+  }
+  catch {
+    // useRequestURL() may not be available in all contexts
+  }
+
+  try {
+    // Fall back to app.baseURL from runtime config
+    const config = useRuntimeConfig()
+    const appConfig = config.app as { baseURL?: string } | undefined
+    const baseURL = appConfig?.baseURL
+    if (baseURL) {
+      // If baseURL is absolute, return it; otherwise construct from origin
+      if (baseURL.startsWith('http://') || baseURL.startsWith('https://')) {
+        return new URL(baseURL).origin
+      }
+      // If baseURL is relative, try to construct absolute URL
+      // In browser, use window.location.origin
+      if (import.meta.client && typeof window !== 'undefined') {
+        return window.location.origin
+      }
+    }
+  }
+  catch {
+    // Runtime config may not be available
+  }
+
+  // Final fallback: use window.location.origin in browser
+  if (import.meta.client && typeof window !== 'undefined') {
+    return window.location.origin
+  }
+
+  // Last resort: return empty string (will cause URL constructor to throw, but that's handled)
+  return ''
+}
+
+/**
+ * Normalize URL to absolute URL
+ * If URL is already absolute (starts with http:// or https://), returns as-is
+ * If URL is relative, combines with base URL
+ */
+function normalizeUrl(url: string, baseUrl: string): string {
+  // Return absolute URLs as-is
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    return url
+  }
+
+  // Normalize relative URLs
+  if (!baseUrl) {
+    // If no base URL available, return relative URL as-is
+    return url
+  }
+
+  try {
+    // Combine base URL with relative URL
+    return new URL(url, baseUrl).href
+  }
+  catch {
+    // If URL construction fails, return original URL
+    return url
+  }
+}
+
+/**
+ * Recursively normalize URLs in schema object
+ * Processes 'url', 'image', 'logo', and 'item' properties, including nested objects and arrays
+ */
+function normalizeSchemaUrls(obj: unknown, baseUrl: string): unknown {
+  if (!obj || typeof obj !== 'object') {
+    return obj
+  }
+
+  if (Array.isArray(obj)) {
+    return obj.map(item => normalizeSchemaUrls(item, baseUrl))
+  }
+
+  const result: Record<string, unknown> = {}
+
+  for (const [key, value] of Object.entries(obj)) {
+    // Normalize 'url', 'image', 'logo', and 'item' properties
+    if ((key === 'url' || key === 'image' || key === 'logo' || key === 'item') && typeof value === 'string') {
+      result[key] = normalizeUrl(value, baseUrl)
+    }
+    // Recursively process nested objects
+    else if (value && typeof value === 'object') {
+      result[key] = normalizeSchemaUrls(value, baseUrl)
+    }
+    else {
+      result[key] = value
+    }
+  }
+
+  return result
+}
 
 /**
  * Helper function that recursively transforms object keys
@@ -196,8 +301,14 @@ export function useSchema(schema: Record<string, unknown> & {
   // Extract renderHtml, visuallyHidden options
   const { renderHtml = false, visuallyHidden = true, ...schemaData } = schema
 
+  // Get base URL for URL normalization
+  const baseUrl = getBaseUrl()
+
+  // Normalize URLs in schema data (before key transformation)
+  const normalizedSchemaData = normalizeSchemaUrls(schemaData, baseUrl) as Record<string, unknown>
+
   // Convert context, type to @context, @type
-  const transformedSchema = transformSchemaKeys(schemaData)
+  const transformedSchema = transformSchemaKeys(normalizedSchemaData)
 
   // Add default value if @context is missing
   const schemaWithContext = {
