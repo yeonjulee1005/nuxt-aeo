@@ -83,6 +83,7 @@ document.querySelectorAll('script[type="application/ld+json"]').forEach(script =
 
 <script setup lang="ts">
 // ItemList Schema data (added per page)
+// Note: Mix of absolute and relative URLs to demonstrate URL normalization
 const itemListData = {
   name: 'Top 5 Popular Technologies',
   description: 'Most popular technologies in 2024',
@@ -90,27 +91,27 @@ const itemListData = {
     {
       position: 1,
       name: 'Nuxt 4',
-      item: 'https://nuxt.com',
+      item: 'https://nuxt.com', // Absolute URL - used as-is
     },
     {
       position: 2,
       name: 'TypeScript',
-      item: 'https://www.typescriptlang.org',
+      item: '/tech/typescript', // Relative URL - will be normalized to absolute
     },
     {
       position: 3,
       name: 'Vue 3',
-      item: 'https://vuejs.org',
+      item: 'https://vuejs.org', // Absolute URL - used as-is
     },
     {
       position: 4,
       name: 'Vite',
-      item: 'https://vitejs.dev',
+      item: '/tech/vite', // Relative URL - will be normalized to absolute
     },
     {
       position: 5,
       name: 'Tailwind CSS',
-      item: 'https://tailwindcss.com',
+      item: 'https://tailwindcss.com', // Absolute URL - used as-is
     },
   ],
 }
@@ -118,6 +119,10 @@ const itemListData = {
 // Add ItemList Schema to page head (page-specific schema)
 // Use useSchema directly to add ItemList Schema
 // Also automatically generate semantic HTML with renderHtml: true
+// Note: useSchema() automatically normalizes URLs:
+// - Absolute URLs (http:// or https://) are used as-is
+// - Relative URLs are combined with the base URL (from useRequestURL() or app.baseURL)
+// - URL normalization applies recursively to nested objects and arrays
 useSchema({
   context: 'https://schema.org',
   type: 'ItemList',
@@ -134,7 +139,8 @@ useSchema({
 })
 
 // Add FAQPage Schema for module-related questions
-useSchemaPage({
+// Note: useSchemaFaq() also automatically normalizes URLs like useSchema()
+useSchemaFaq({
   mainEntity: [
     {
       name: 'What are the main features of the Nuxt AEO module?',
@@ -151,13 +157,13 @@ useSchemaPage({
     {
       name: 'How do I configure global schemas?',
       acceptedAnswer: {
-        text: 'Configure schemas in the aeo.schemas array in the nuxt.config.ts file, and they will be automatically injected into all pages. Global schemas are used for information that applies to the entire site, such as Organization and Person. Page-specific schemas can be added to individual pages using useSchema() or useSchemaPage().',
+        text: 'Configure schemas in the aeo.schemas array in the nuxt.config.ts file, and they will be automatically injected into all pages. Global schemas are used for information that applies to the entire site, such as Organization and Person. Page-specific schemas can be added to individual pages using useSchema() or useSchemaFaq().',
       },
     },
     {
-      name: 'What is the difference between useSchemaPage() and useSchema()?',
+      name: 'What is the difference between useSchemaFaq() and useSchema()?',
       acceptedAnswer: {
-        text: 'useSchema() is used to add general Schema.org schemas (Person, Organization, Article, etc.), while useSchemaPage() is used to add page metadata and FAQPage schema. useSchemaPage() automatically generates FAQPage Schema to help AI models understand the main questions and answers on the page.',
+        text: 'useSchema() is used to add general Schema.org schemas (Person, Organization, Article, etc.), while useSchemaFaq() is used to add page metadata and FAQPage schema. useSchemaFaq() automatically generates FAQPage Schema to help AI models understand the main questions and answers on the page.',
       },
     },
   ],

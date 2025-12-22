@@ -31,6 +31,7 @@
 
 <script setup lang="ts">
 // Catalog data
+// Note: Mix of absolute and relative URLs to demonstrate URL normalization
 const catalog = {
   name: 'Top 10 Best Selling Products',
   description: 'Our most popular products this month based on sales data.',
@@ -38,37 +39,41 @@ const catalog = {
     {
       position: 1,
       name: 'Premium Wireless Headphones',
-      url: 'https://example.com/products/headphones',
+      url: '/products/headphones', // Relative URL - will be normalized to absolute
       description: 'High-quality wireless headphones with noise cancellation.',
     },
     {
       position: 2,
       name: 'Smart Watch Pro',
-      url: 'https://example.com/products/smartwatch',
+      url: 'https://example.com/products/smartwatch', // Absolute URL - used as-is
       description: 'Advanced smartwatch with health tracking features.',
     },
     {
       position: 3,
       name: 'Portable Laptop Stand',
-      url: 'https://example.com/products/laptop-stand',
+      url: '/products/laptop-stand', // Relative URL - will be normalized to absolute
       description: 'Ergonomic laptop stand for better posture.',
     },
     {
       position: 4,
       name: 'Mechanical Keyboard',
-      url: 'https://example.com/products/keyboard',
+      url: '/products/keyboard', // Relative URL - will be normalized to absolute
       description: 'RGB mechanical keyboard with customizable keys.',
     },
     {
       position: 5,
       name: 'USB-C Hub',
-      url: 'https://example.com/products/usb-hub',
+      url: 'https://example.com/products/usb-hub', // Absolute URL - used as-is
       description: 'Multi-port USB-C hub for laptops and tablets.',
     },
   ],
 }
 
 // Add ItemList Schema
+// Note: useSchema() automatically normalizes URLs:
+// - Absolute URLs (http:// or https://) are used as-is
+// - Relative URLs are combined with the base URL (from useRequestURL() or app.baseURL)
+// - URL normalization applies recursively to nested objects and arrays (e.g., itemListElement[].item)
 useSchema({
   context: 'https://schema.org',
   type: 'ItemList',
@@ -85,7 +90,8 @@ useSchema({
 })
 
 // Add FAQPage Schema for ItemList Schema-related questions
-useSchemaPage({
+// Note: useSchemaFaq() also automatically normalizes URLs like useSchema()
+useSchemaFaq({
   mainEntity: [
     {
       name: 'When should I use ItemList Schema?',
