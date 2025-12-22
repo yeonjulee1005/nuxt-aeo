@@ -211,7 +211,7 @@ orientation: horizontal
     ::::tabs-item{icon="i-simple-icons-nuxtdotjs" label="pages/index.vue"}
     ```vue [pages/index.vue]
     <script setup lang="ts">
-    useSchemaPage({
+    useSchemaFaq({
       mainEntity: [
         {
           name: 'What is the Nuxt AEO module?',
@@ -222,19 +222,19 @@ orientation: horizontal
         {
           name: 'What Schema types are supported?',
           acceptedAnswer: {
-            text: 'Nuxt AEO supports various Schema.org types including Person, Organization, Article, ItemList, and more. You can configure both global schemas and page-specific schemas through useSchema() and useSchemaPage() composables.',
+            text: 'Nuxt AEO supports various Schema.org types including Person, Organization, Article, ItemList, and more. You can configure both global schemas and page-specific schemas through useSchema() and useSchemaFaq() composables.',
           },
         },
         {
           name: 'Can I use it immediately after installation?',
           acceptedAnswer: {
-            text: 'Yes! Nuxt AEO can be used immediately after installation. Once you install the module and add it to nuxt.config.ts, you can define schemas using useSchema() or useSchemaPage() composables. It provides default behavior without additional configuration.',
+            text: 'Yes! Nuxt AEO can be used immediately after installation. Once you install the module and add it to nuxt.config.ts, you can define schemas using useSchema() or useSchemaFaq() composables. It provides default behavior without additional configuration.',
           },
         },
         {
-          name: 'What is the difference between useSchemaPage() and useSchema()?',
+          name: 'What is the difference between useSchemaFaq() and useSchema()?',
           acceptedAnswer: {
-            text: 'useSchema() is used to define schemas that describe the main content of a page (e.g., Article, Person), while useSchemaPage() is used to define metadata about the page itself (e.g., FAQPage, BreadcrumbList). You can use both composables together to structure both page content and metadata.',
+            text: 'useSchema() is used to define schemas that describe the main content of a page (e.g., Article, Person), while useSchemaFaq() is used to define metadata about the page itself (e.g., FAQPage, BreadcrumbList). You can use both composables together to structure both page content and metadata.',
           },
         },
       ],
@@ -262,14 +262,14 @@ orientation: horizontal
         FAQPage Schema Example.
 
         #description
-        Learn how to use useSchemaPage() composable to add FAQPage schema for better AI and search engine understanding.
+        Learn how to use useSchemaFaq() composable to add FAQPage schema for better AI and search engine understanding.
         ::::::
       :::::
     ::::
   :::
 
 #title{unwrap="p" class="!my-0 !leading-tight"}
-Add FAQPage schema with [useSchemaPage()]{.text-(--ui-secondary)} composable
+Add FAQPage schema with [useSchemaFaq()]{.text-(--ui-secondary)} composable
 
 #features
   :::u-page-feature
@@ -300,7 +300,7 @@ Add FAQPage schema with [useSchemaPage()]{.text-(--ui-secondary)} composable
   :::u-button
   ---
   color: neutral
-  label: Learn more about useSchemaPage()
+  label: Learn more about useSchemaFaq()
   to: /guide/usage
   trailingIcon: i-lucide-arrow-right
   variant: subtle

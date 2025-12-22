@@ -1,21 +1,21 @@
-# Schema 사용 가이드
+# Schema Usage Guide
 
-이 문서는 Nuxt AEO 모듈에서 스키마를 사용하는 방법을 설명합니다.
+This document explains how to use schemas in the Nuxt AEO module.
 
-## 스키마 사용 패턴
+## Schema Usage Patterns
 
-Nuxt AEO 모듈은 두 가지 방식으로 스키마를 사용할 수 있습니다:
+The Nuxt AEO module supports two ways to use schemas:
 
-### 1. 전역 스키마 (Global Schemas)
+### 1. Global Schemas
 
-`nuxt.config.ts`의 `aeo.schemas` 배열에 설정된 스키마는 **모든 페이지에 자동으로 주입**됩니다.
+Schemas configured in the `aeo.schemas` array in `nuxt.config.ts` are **automatically injected into all pages**.
 
-**사용 사례:**
-- Organization: 프로젝트/회사 정보
-- Person: 작성자 정보 (모든 페이지에 공통)
-- WebSite: 웹사이트 정보
+**Use Cases:**
+- Organization: Project/company information
+- Person: Author information (common to all pages)
+- WebSite: Website information
 
-**설정 방법:**
+**Configuration:**
 ```ts
 // nuxt.config.ts
 export default defineNuxtConfig({
@@ -25,35 +25,38 @@ export default defineNuxtConfig({
       {
         type: 'Organization',
         name: 'My Company',
-        url: 'https://example.com',
+        url: '/', // Relative URL - will be normalized to absolute
+        logo: '/images/logo.png', // Relative URL - will be normalized to absolute
       },
       {
         type: 'Person',
         name: 'John Doe',
+        url: 'https://example.com/profile', // Absolute URL - used as-is
+        image: '/images/profile.jpg', // Relative URL - will be normalized to absolute
       },
     ],
   },
 })
 ```
 
-**참고:** `type`을 사용하면 내부적으로 `@type`으로 자동 변환됩니다. `schemas` 배열이 없거나 비어있으면 기본 `Project` 스키마가 주입됩니다.
+**Note:** Using `type` will automatically convert it to `@type` internally. If the `schemas` array is missing or empty, a default `Project` schema is injected.
 
-### 2. 페이지별 스키마 (Page-specific Schemas)
+### 2. Page-specific Schemas
 
-각 페이지에서 composable 함수를 사용하여 **해당 페이지에만** 스키마를 추가할 수 있습니다.
+You can add schemas **only to specific pages** using composable functions.
 
-**사용 사례:**
-- FAQPage: FAQ 페이지에만 필요
-- Article: 블로그 포스트 페이지에만 필요
-- ItemList: 리스트 페이지에만 필요
-- Person: 특정 페이지에서만 추가로 표시하고 싶은 경우
+**Use Cases:**
+- FAQPage: Required only on FAQ pages
+- Article: Required only on blog post pages
+- ItemList: Required only on list pages
+- Person: When you want to display additional Person information on specific pages
 
-**사용 방법:**
+**Usage:**
 ```vue
 <!-- pages/faq.vue -->
 <script setup lang="ts">
-// FAQ 페이지에만 FAQPage Schema 추가
-useSchemaPage({
+// Add FAQPage Schema only to FAQ page
+useSchemaFaq({
   mainEntity: [
     {
       name: 'Question?',
@@ -64,27 +67,30 @@ useSchemaPage({
 </script>
 ```
 
-## Composable 함수들
+## Composable Functions
 
-다음 composable 함수들은 **페이지별 스키마**를 추가하는 데 사용됩니다:
+The following composable functions are used to add **page-specific schemas**:
 
-### ✅ 사용 가능한 함수들
+### ✅ Available Functions
 
-1. **`useSchemaPage()`** - FAQPage Schema 추가
-  - FAQ 페이지에 필수
-  - 시맨틱 HTML 자동 생성 기능 포함 (기본값: `true`)
-  - 전역 스키마와는 별개로 페이지별로 추가
+1. **`useSchemaFaq()`** - Add FAQPage Schema
+  - Required for FAQ pages
+  - Includes automatic semantic HTML generation (default: `true`)
+  - **Automatic URL Normalization**: Provides URL normalization functionality like `useSchema()`
+  - Added per page, separate from global schemas
 
-2. **`useSchema()`** - 범용 Schema 추가
-  - 모든 Schema 타입을 추가할 수 있는 범용 함수
-  - `context`와 `type`을 사용하면 내부적으로 `@context`와 `@type`으로 자동 변환
-  - Person, Organization, ItemList, Article 등 모든 Schema 타입 지원
+2. **`useSchema()`** - Universal Schema addition
+  - Universal function that can add any Schema type
+  - Using `context` and `type` will automatically convert them to `@context` and `@type` internally
+  - **Automatic URL Normalization**: Absolute URLs are used as-is, while relative URLs are combined with the base URL to convert to absolute URLs
+  - URL normalization applies recursively to nested objects and arrays (e.g., `author.url`, `publisher.logo.url`, `sameAs[]`, `itemListElement[].item`)
+  - Supports all Schema types including Person, Organization, ItemList, Article, etc.
 
-**사용 예시:**
+**Usage Examples:**
 ```vue
 <script setup lang="ts">
 // FAQPage Schema
-useSchemaPage({
+useSchemaFaq({
   mainEntity: [
     {
       name: 'Question?',
@@ -93,15 +99,21 @@ useSchemaPage({
   ],
 })
 
-// Person Schema
+// Person Schema with mixed absolute and relative URLs
 useSchema({
   context: 'https://schema.org',
   type: 'Person',
   name: 'John Doe',
   jobTitle: 'Software Engineer',
+  url: '/profile', // Relative URL - will be normalized to absolute
+  image: 'https://example.com/profile.jpg', // Absolute URL - used as-is
+  sameAs: [
+    'https://github.com/johndoe', // Absolute URL - used as-is
+    '/social/twitter', // Relative URL - will be normalized to absolute
+  ],
 })
 
-// ItemList Schema
+// ItemList Schema with mixed absolute and relative URLs
 useSchema({
   context: 'https://schema.org',
   type: 'ItemList',
@@ -111,86 +123,102 @@ useSchema({
       type: 'ListItem',
       position: 1,
       name: 'Item 1',
-      item: 'https://example.com/item1',
+      item: '/products/item1', // Relative URL - will be normalized to absolute
+    },
+    {
+      type: 'ListItem',
+      position: 2,
+      name: 'Item 2',
+      item: 'https://example.com/item2', // Absolute URL - used as-is
     },
   ],
 })
 </script>
 ```
 
-## 전역 스키마 vs 페이지별 스키마
+## Global Schemas vs Page-specific Schemas
 
-| 구분 | 전역 스키마 | 페이지별 스키마 |
-|------|------------|----------------|
-| 설정 위치 | `nuxt.config.ts` | 각 페이지 컴포넌트 |
-| 적용 범위 | 모든 페이지 | 해당 페이지만 |
-| 사용 방법 | `aeo.schemas` 배열 | Composable 함수 |
-| 예시 | Organization, Person (공통) | FAQPage, Article (페이지별) |
+| Category | Global Schemas | Page-specific Schemas |
+|----------|---------------|----------------------|
+| Configuration Location | `nuxt.config.ts` | Each page component |
+| Scope | All pages | Only that page |
+| Usage Method | `aeo.schemas` array | Composable functions |
+| Examples | Organization, Person (common) | FAQPage, Article (page-specific) |
 
-## 실제 사용 예시
+## Real-world Usage Examples
 
-### 예시 1: FAQ 페이지
+### Example 1: FAQ Page
 
 ```vue
 <!-- pages/faq.vue -->
 <script setup lang="ts">
-// 전역 스키마 (자동 주입):
-// - Organization (nuxt.config.ts에서 설정)
-// - Person (nuxt.config.ts에서 설정)
+// Global schemas (auto-injected):
+// - Organization (configured in nuxt.config.ts)
+// - Person (configured in nuxt.config.ts)
 
-// 페이지별 스키마 (수동 추가):
-useSchemaPage({
+// Page-specific schema (manually added):
+useSchemaFaq({
   mainEntity: [
-    // FAQ 질문-답변
+    // FAQ questions and answers
   ],
 })
 </script>
 ```
 
-**결과:**
-- Organization Schema (전역)
-- Person Schema (전역)
-- FAQPage Schema (페이지별)
+**Result:**
+- Organization Schema (global)
+- Person Schema (global)
+- FAQPage Schema (page-specific)
 
-### 예시 2: 블로그 포스트 페이지
+### Example 2: Blog Post Page
 
 ```vue
 <!-- pages/blog/[slug].vue -->
 <script setup lang="ts">
-// 전역 스키마 (자동 주입):
-// - Organization (전역)
-// - Person (전역)
+// Global schemas (auto-injected):
+// - Organization (global)
+// - Person (global)
 
-// 페이지별 스키마 (수동 추가):
+// Page-specific schema (manually added):
 useSchema({
   context: 'https://schema.org',
   type: 'Article',
   headline: 'Article Title',
   datePublished: '2024-01-01',
+  image: '/images/article.jpg', // Relative URL - will be normalized to absolute
   author: {
     type: 'Person',
     name: 'Author Name',
+    url: 'https://example.com/author', // Absolute URL - used as-is
+  },
+  publisher: {
+    type: 'Organization',
+    name: 'Example Company',
+    logo: {
+      type: 'ImageObject',
+      url: '/logo.png', // Relative URL - will be normalized to absolute
+    },
   },
   // ...
 })
 </script>
 ```
 
-**결과:**
-- Organization Schema (전역)
-- Person Schema (전역)
-- Article Schema (페이지별)
+**Result:**
+- Organization Schema (global)
+- Person Schema (global)
+- Article Schema (page-specific)
 
-### 예시 3: 리스트 페이지
+### Example 3: List Page
 
 ```vue
 <!-- pages/list.vue -->
 <script setup lang="ts">
-// 전역 스키마 (자동 주입):
-// - Organization (전역)
-// - Person (전역)
+// Global schemas (auto-injected):
+// - Organization (global)
+// - Person (global)
 
-// 페이지별 스키마 (수동 추가):
+// Page-specific schema (manually added):
 useSchema({
   context: 'https://schema.org',
   type: 'ItemList',
@@ -200,22 +228,40 @@ useSchema({
       type: 'ListItem',
       position: 1,
       name: 'Item 1',
-      item: 'https://example.com/item1',
+      item: '/products/item1', // Relative URL - will be normalized to absolute
+    },
+    {
+      type: 'ListItem',
+      position: 2,
+      name: 'Item 2',
+      item: 'https://example.com/item2', // Absolute URL - used as-is
     },
   ],
 })
 </script>
 ```
 
-**결과:**
-- Organization Schema (전역)
-- Person Schema (전역)
-- ItemList Schema (페이지별)
+**Result:**
+- Organization Schema (global)
+- Person Schema (global)
+- ItemList Schema (page-specific)
 
-## 결론
+## URL Normalization
 
-- **전역 스키마**: 모든 페이지에 공통으로 필요한 정보 (Organization, Person 등). `nuxt.config.ts`의 `schemas` 배열로 설정. 설정하지 않으면 기본 `Project` 스키마가 주입됩니다.
-- **페이지별 스키마**: 특정 페이지에만 필요한 정보 (FAQPage, Article, ItemList 등). `useSchema()` 또는 `useSchemaPage()`로 추가.
-- **키 변환**: `context`와 `type`을 사용하면 내부적으로 `@context`와 `@type`으로 자동 변환되므로, 따옴표 없이 일반 속성처럼 사용할 수 있습니다.
+Both `useSchema()` and `useSchemaFaq()` automatically perform URL normalization:
 
-두 방식을 함께 사용하여 유연하고 강력한 AEO 최적화를 구현할 수 있습니다.
+- **Absolute URLs** (starting with `http://` or `https://`): Used as-is
+- **Relative URLs**: Combined with base URL (from `useRequestURL()` or `app.baseURL`)
+- **Recursive Processing**: Processes `url` and `image` properties recursively, including nested objects
+  - Examples: `author.url`, `publisher.logo.url`, `sameAs[]`, `itemListElement[].item`
+
+This ensures that all URLs in your schema are automatically converted to absolute URLs, which is required by Schema.org standards.
+
+## Conclusion
+
+- **Global Schemas**: Information common to all pages (Organization, Person, etc.). Configure in the `schemas` array in `nuxt.config.ts`. If not configured, a default `Project` schema is injected.
+- **Page-specific Schemas**: Information required only on specific pages (FAQPage, Article, ItemList, etc.). Add using `useSchema()` or `useSchemaFaq()`.
+- **Key Conversion**: Using `context` and `type` will automatically convert them to `@context` and `@type` internally, so you can use them like regular properties without quotes.
+- **URL Normalization**: Relative URL paths are automatically converted to absolute URLs to comply with Schema.org standards.
+
+You can use both approaches together to implement flexible and powerful AEO optimization.

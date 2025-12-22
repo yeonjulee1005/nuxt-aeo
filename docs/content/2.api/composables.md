@@ -32,6 +32,11 @@ A Schema object. It can include the following properties:
 ### Features
 
 - **Automatic Key Conversion**: Using `context` and `type` will automatically convert them to `@context` and `@type` internally. Nested objects are also converted recursively.
+- **Automatic URL Normalization**: Automatically normalizes URLs in schema objects:
+  - Absolute URLs (starting with `http://` or `https://`) are used as-is
+  - Relative URLs are combined with the base URL (from `useRequestURL()` or `app.baseURL`)
+  - URL normalization applies recursively to nested objects and arrays
+  - Processes `url`, `image`, `logo`, and `item` properties throughout the schema
 - **SSR Support**: Uses `useHead()` to work perfectly in server-side rendering environments.
 - **Semantic HTML Generation**: When `renderHtml: true` is set, semantic HTML is automatically generated for specific types like Organization, Person, ItemList, etc.
 
@@ -41,13 +46,13 @@ A Schema object. It can include the following properties:
 
 ```vue [pages/example.vue]
 <script setup lang="ts">
-// Organization Schema
+// Organization Schema with mixed absolute and relative URLs
 useSchema({
   context: 'https://schema.org',
   type: 'Organization',
   name: 'Example Company',
-  url: 'https://example.com',
-  logo: 'https://example.com/logo.png',
+  url: '/', // Relative URL - will be normalized to absolute
+  logo: '/images/logo.png', // Relative URL - will be normalized to absolute
   description: 'A great company',
 })
 </script>
@@ -62,12 +67,12 @@ useSchema({
   type: 'Person',
   name: 'John Doe',
   jobTitle: 'Software Engineer',
-  url: 'https://example.com',
-  image: 'https://example.com/profile.jpg',
+  url: '/profile', // Relative URL - will be normalized to absolute
+  image: '/images/profile.jpg', // Relative URL - will be normalized to absolute
   knowsAbout: ['Nuxt', 'TypeScript', 'Vue'],
   sameAs: [
-    'https://github.com/johndoe',
-    'https://twitter.com/johndoe',
+    'https://github.com/johndoe', // Absolute URL - used as-is
+    '/social/twitter', // Relative URL - will be normalized to absolute
   ],
 })
 </script>
@@ -87,19 +92,19 @@ useSchema({
       type: 'ListItem',
       position: 1,
       name: 'JavaScript',
-      item: 'https://example.com/javascript',
+      item: '/tech/javascript', // Relative URL - will be normalized to absolute
     },
     {
       type: 'ListItem',
       position: 2,
       name: 'Python',
-      item: 'https://example.com/python',
+      item: 'https://www.python.org', // Absolute URL - used as-is
     },
     {
       type: 'ListItem',
       position: 3,
       name: 'TypeScript',
-      item: 'https://example.com/typescript',
+      item: '/tech/typescript', // Relative URL - will be normalized to absolute
     },
   ],
 })
@@ -115,7 +120,8 @@ useSchema({
   context: 'https://schema.org',
   type: 'Organization',
   name: 'Example Company',
-  url: 'https://example.com',
+  url: '/', // Relative URL - will be normalized to absolute
+  logo: '/images/logo.png', // Relative URL - will be normalized to absolute
   description: 'A great company',
   renderHtml: true,        // Generate semantic HTML
   visuallyHidden: true,    // Visually hide (default)
@@ -133,6 +139,8 @@ useSchema({
   type: 'Person',
   name: 'John Doe',
   jobTitle: 'Software Engineer',
+  url: '/profile', // Relative URL - will be normalized to absolute
+  image: 'https://example.com/profile.jpg', // Absolute URL - used as-is
   renderHtml: true,
   visuallyHidden: false,  // Display on screen
 })
@@ -158,14 +166,14 @@ When `renderHtml: true` is set, special semantic HTML is generated for the follo
 
 ---
 
-## useSchemaPage
+## useSchemaFaq
 
 A type-safe helper composable for easily adding FAQPage Schema. Used when adding question-answer structures to FAQ pages.
 
 ### Type Definition
 
 ```ts [composables.ts]
-function useSchemaPage(data: {
+function useSchemaFaq(data: {
   mainEntity: Array<{
     name: string
     acceptedAnswer: { text: string, [key: string]: unknown }
@@ -195,16 +203,21 @@ FAQPage Schema data object:
 
 - **Type Safety**: Defined with TypeScript for type checking.
 - **Easy to Use**: You can define FAQs in a simple object format without writing complex JSON-LD structures directly.
+- **Automatic URL Normalization**: Like `useSchema()`, automatically normalizes URLs:
+  - Absolute URLs (starting with `http://` or `https://`) are used as-is
+  - Relative URLs are combined with the base URL (from `useRequestURL()` or `app.baseURL`)
+  - URL normalization applies recursively to nested objects and arrays
+  - Processes `url`, `image`, `logo`, and `item` properties throughout the schema
 - **Automatic Conversion**: Internally uses `useSchema` to convert to JSON-LD format and automatically generates semantic HTML suitable for FAQPage.
 - **Default Semantic HTML Generation**: `renderHtml` is set to `true` by default, so semantic HTML is automatically generated without additional configuration.
 
-> **Note**: Unlike `useSchema`, `useSchemaPage` has a default value of `true` for `renderHtml`. To not generate semantic HTML, you must explicitly set `renderHtml: false`.
+> **Note**: Unlike `useSchema`, `useSchemaFaq` has a default value of `true` for `renderHtml`. To not generate semantic HTML, you must explicitly set `renderHtml: false`.
 
 ### Basic Usage Example
 
 ```vue [pages/example.vue]
 <script setup lang="ts">
-useSchemaPage({
+useSchemaFaq({
   mainEntity: [
     {
       name: 'What is the Nuxt AEO module?',
@@ -221,7 +234,7 @@ useSchemaPage({
     {
       name: 'Is semantic HTML automatically generated?',
       acceptedAnswer: {
-        text: 'Yes, useSchemaPage automatically generates semantic HTML by default. You can control it with the renderHtml option.',
+        text: 'Yes, useSchemaFaq automatically generates semantic HTML by default. You can control it with the renderHtml option.',
       },
     },
   ],
@@ -233,7 +246,7 @@ useSchemaPage({
 
 ```vue [pages/example.vue]
 <script setup lang="ts">
-useSchemaPage({
+useSchemaFaq({
   mainEntity: [
     {
       name: 'How do I install it?',
@@ -255,7 +268,7 @@ useSchemaPage({
 ```vue [pages/example.vue]
 <script setup lang="ts">
 // Add only JSON-LD, do not generate semantic HTML
-useSchemaPage({
+useSchemaFaq({
   mainEntity: [
     {
       name: 'Question 1',
@@ -274,7 +287,7 @@ useSchemaPage({
 ```vue [pages/example.vue]
 <script setup lang="ts">
 // Display semantic HTML on screen (so screen readers and crawlers can read it)
-useSchemaPage({
+useSchemaFaq({
   mainEntity: [
     {
       name: 'Question 1',
@@ -291,7 +304,7 @@ useSchemaPage({
 
 ### Generated JSON-LD Structure
 
-`useSchemaPage` internally generates the following JSON-LD structure:
+`useSchemaFaq` internally generates the following JSON-LD structure:
 
 ```json [example.json]
 {
@@ -333,13 +346,13 @@ When `renderHtml: true`, the following semantic HTML is generated:
 > **Warning**:
 >
 > - Semantic HTML is injected only on the client side.
-> - Calling `useSchemaPage` multiple times on the same page will remove the previously injected semantic HTML and replace it with new HTML.
+> - Calling `useSchemaFaq` multiple times on the same page will remove the previously injected semantic HTML and replace it with new HTML.
 
 ---
 
-## Comparison: useSchema vs useSchemaPage
+## Comparison: useSchema vs useSchemaFaq
 
-| Feature            | useSchema                                     | useSchemaPage                          |
+| Feature            | useSchema                                     | useSchemaFaq                          |
 | ------------------ | --------------------------------------------- | -------------------------------------- |
 | Purpose            | Supports all Schema types                     | FAQPage only                           |
 | Type Safety        | Generic object                                | FAQPage-specific type definition       |
@@ -350,7 +363,7 @@ When `renderHtml: true`, the following semantic HTML is generated:
 ### When to Use What?
 
 - `useSchema`: Use for all Schema types other than FAQPage, such as Person, Organization, ItemList, Article, etc.
-- `useSchemaPage`: Use when adding question-answer structures to FAQ pages (more convenient and type-safe)
+- `useSchemaFaq`: Use when adding question-answer structures to FAQ pages (more convenient and type-safe)
 
 ---
 

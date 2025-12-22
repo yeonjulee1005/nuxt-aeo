@@ -70,18 +70,19 @@
 
 <script setup lang="ts">
 // Person data
+// Note: Mix of absolute and relative URLs to demonstrate URL normalization
 const person = {
   name: 'John Doe',
   alternateName: 'johndoe',
   jobTitle: 'Software Engineer',
-  url: 'https://example.com',
-  image: 'https://example.com/profile.jpg',
+  url: '/profile', // Relative URL - will be normalized to absolute
+  image: '/images/profile.jpg', // Relative URL - will be normalized to absolute
   description: 'Full-stack developer with expertise in web application development.',
   knowsAbout: ['JavaScript', 'TypeScript', 'Vue.js', 'Nuxt', 'Node.js'],
   sameAs: [
-    'https://github.com/johndoe',
-    'https://twitter.com/johndoe',
-    'https://linkedin.com/in/johndoe',
+    'https://github.com/johndoe', // Absolute URL - used as-is
+    '/social/twitter', // Relative URL - will be normalized to absolute
+    'https://linkedin.com/in/johndoe', // Absolute URL - used as-is
   ],
   worksFor: {
     name: 'Example Company',
@@ -89,6 +90,10 @@ const person = {
 }
 
 // Add Person Schema
+// Note: useSchema() automatically normalizes URLs:
+// - Absolute URLs (http:// or https://) are used as-is
+// - Relative URLs are combined with the base URL (from useRequestURL() or app.baseURL)
+// - URL normalization applies recursively to nested objects and arrays (e.g., sameAs[], worksFor.url)
 useSchema({
   context: 'https://schema.org',
   type: 'Person',
@@ -109,7 +114,8 @@ useSchema({
 })
 
 // Add FAQPage Schema for Person Schema-related questions
-useSchemaPage({
+// Note: useSchemaFaq() also automatically normalizes URLs like useSchema()
+useSchemaFaq({
   mainEntity: [
     {
       name: 'When should I use Person Schema?',
