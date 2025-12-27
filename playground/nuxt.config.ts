@@ -1,5 +1,8 @@
 export default defineNuxtConfig({
-  modules: ['nuxt-aeo'],
+  modules: [
+    'nuxt-aeo',
+    '@nuxt/ui',
+  ],
 
   devtools: { enabled: true },
 
@@ -13,6 +16,12 @@ export default defineNuxtConfig({
         },
       ],
     },
+  },
+
+  css: ['~/assets/css/main.css'],
+
+  colorMode: {
+    preference: 'dark',
   },
   /**
    * AEO (AI Engine Optimization) module configuration

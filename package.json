@@ -1,6 +1,6 @@
 {
   "name": "nuxt-aeo",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "description": "Nuxt module for AI Engine Optimization (AEO) using Schema.org JSON-LD structured data",
   "keywords": [
     "nuxt",
@@ -21,6 +21,7 @@
     "type": "git",
     "url": "https://github.com/yeonjulee1005/nuxt-aeo.git"
   },
+  "homepage": "https://nuxt-aeo-docs.vercel.app/",
   "author": "Yeonju Lee (Dewdew)",
   "license": "MIT",
   "type": "module",
