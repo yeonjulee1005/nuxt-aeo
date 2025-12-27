@@ -47,11 +47,14 @@ jobs:
       - name: Install dependencies
         run: bun install
 
+      - name: Install playground dependencies
+        run: cd playground && bun install && cd ..
+
       - name: Playground prepare
-        run: npm run dev:prepare
+        run: bun run dev:prepare
 
       - name: Type check
-        run: npm run test:types
+        run: bun run test:types
 
   publish:
     runs-on: ubuntu-latest
