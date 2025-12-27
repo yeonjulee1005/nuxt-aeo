@@ -73,13 +73,6 @@
 </script>
 
 <style scoped>
-.app-container {
-  min-height: 100vh;
-  background-color: #f9fafb;
-  display: flex;
-  flex-direction: column;
-}
-
 .app-header {
   background-color: #ffffff;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);

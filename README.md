@@ -94,9 +94,50 @@ export default defineNuxtConfig({
 })
 ```
 
+### Route-Specific Schema Configuration
+
+You can configure schemas to be applied only to specific routes by setting the `url` field in the schema configuration:
+
+```ts
+// nuxt.config.ts
+export default defineNuxtConfig({
+  modules: ['nuxt-aeo'],
+  aeo: {
+    schemas: [
+      {
+        type: 'WebSite',
+        name: 'Portfolio',
+        description: 'Portfolio is a website of Software Engineer.',
+        url: '/', // Only applied to root route
+        logo: '/images/logo.png',
+      },
+      {
+        type: 'Introduction',
+        name: 'Introduction',
+        description: 'Introduction is a page of Software Engineer.',
+        url: '/introduction', // Only applied to /introduction route
+        logo: '/images/logo.png',
+      },
+      {
+        type: 'Organization',
+        name: 'My Company',
+        // No url field - applied to all routes (backward compatibility)
+      },
+    ],
+  }
+})
+```
+
+**Route Matching Rules:**
+- If `url` is not specified, the schema is applied to all routes (backward compatibility)
+- If `url` is specified, the schema is only applied when the current route path matches exactly
+- Both relative paths (`/`, `/introduction`) and absolute URLs (`https://www.example.com/about`) are supported
+- Paths are normalized (trailing slashes are removed) for comparison
+
 ### Option Description
 
 - **`schemas`** (Optional): Array of schemas to inject globally. You can configure various schema types like Person, Organization, WebSite, etc. When configured, they are automatically injected into all pages. If the `schemas` array is missing or empty, a default `Project` schema is injected.
+  - **Route-Specific Schemas**: You can configure schemas to be applied only to specific routes by setting the `url` field. If `url` is not specified, the schema is applied to all routes (backward compatibility). If `url` is specified, the schema is only applied when the current route path matches exactly.
 - **`autoInject`** (Optional, default: `true`): Controls whether global schema information is automatically injected. If `false`, schemas are not injected even if the `schemas` array exists. If the `schemas` array is missing, a default `Project` schema is injected (except when `autoInject: false`).
 - **`renderHtml`** (Optional, default: `true`): Controls whether semantic HTML is automatically generated globally. If `true`, semantic HTML is automatically generated for global schemas and injected into pages. Semantic HTML is used together with JSON-LD to optimize LLM crawling. Can be overridden with the `renderHtml` option on individual schemas.
 - **`visuallyHidden`** (Optional, default: `true`): Controls whether semantic HTML is visually hidden globally. If `true`, generated semantic HTML is hidden with the `visually-hidden` class. LLM crawlers and search engines can read it, but it's not visible to users. Can be overridden with the `visuallyHidden` option on individual schemas.

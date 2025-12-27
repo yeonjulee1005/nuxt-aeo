@@ -21,6 +21,7 @@
     "type": "git",
     "url": "https://github.com/yeonjulee1005/nuxt-aeo.git"
   },
+  "homepage": "https://nuxt-aeo-docs.vercel.app/",
   "author": "Yeonju Lee (Dewdew)",
   "license": "MIT",
   "type": "module",

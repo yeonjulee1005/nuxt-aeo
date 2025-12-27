@@ -19,7 +19,5 @@ export default defineAppConfig({
         description: 'text-base text-pretty text-muted',
       },
     },
-    prose: {
-    },
   },
 })
