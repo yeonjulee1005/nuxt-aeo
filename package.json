@@ -25,6 +25,9 @@
   "author": "Yeonju Lee (Dewdew)",
   "license": "MIT",
   "type": "module",
+  "workspaces": [
+    "playground"
+  ],
   "exports": {
     ".": {
       "types": "./dist/types.d.mts",
