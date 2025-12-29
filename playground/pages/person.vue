@@ -1,99 +1,22 @@
-<template>
-  <div class="profile-page">
-    <div class="container">
-      <div class="profile-header">
-        <img
-          v-if="person.image"
-          :src="person.image"
-          :alt="person.name"
-          class="profile-image"
-        >
-        <div class="profile-info">
-          <h1>{{ person.name }}</h1>
-          <p
-            v-if="person.alternateName"
-            class="alternate-name"
-          >
-            {{ person.alternateName }}
-          </p>
-          <p
-            v-if="person.jobTitle"
-            class="job-title"
-          >
-            {{ person.jobTitle }}
-          </p>
-          <p
-            v-if="person.description"
-            class="description"
-          >
-            {{ person.description }}
-          </p>
-        </div>
-      </div>
-
-      <div
-        v-if="person.knowsAbout && person.knowsAbout.length > 0"
-        class="skills-section"
-      >
-        <h2>Technical Stack</h2>
-        <ul class="skills-list">
-          <li
-            v-for="(skill, index) in person.knowsAbout"
-            :key="index"
-          >
-            {{ skill }}
-          </li>
-        </ul>
-      </div>
-
-      <div
-        v-if="person.sameAs && person.sameAs.length > 0"
-        class="social-section"
-      >
-        <h2>Social Media</h2>
-        <ul class="social-list">
-          <li
-            v-for="(url, index) in person.sameAs"
-            :key="index"
-          >
-            <a
-              :href="url"
-              target="_blank"
-              rel="noopener noreferrer"
-            >{{ url }}</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
-// Person data
-// Note: Mix of absolute and relative URLs to demonstrate URL normalization
 const person = {
   name: 'John Doe',
   alternateName: 'johndoe',
   jobTitle: 'Software Engineer',
-  url: '/profile', // Relative URL - will be normalized to absolute
-  image: '/images/profile.jpg', // Relative URL - will be normalized to absolute
+  url: '/profile',
+  image: '/images/profile.jpg',
   description: 'Full-stack developer with expertise in web application development.',
   knowsAbout: ['JavaScript', 'TypeScript', 'Vue.js', 'Nuxt', 'Node.js'],
   sameAs: [
-    'https://github.com/johndoe', // Absolute URL - used as-is
-    '/social/twitter', // Relative URL - will be normalized to absolute
-    'https://linkedin.com/in/johndoe', // Absolute URL - used as-is
+    'https://github.com/johndoe',
+    '/social/twitter',
+    'https://linkedin.com/in/johndoe',
   ],
   worksFor: {
     name: 'Example Company',
   },
 }
 
-// Add Person Schema
-// Note: useSchema() automatically normalizes URLs:
-// - Absolute URLs (http:// or https://) are used as-is
-// - Relative URLs are combined with the base URL (from useRequestURL() or app.baseURL)
-// - URL normalization applies recursively to nested objects and arrays (e.g., sameAs[], worksFor.url)
 useSchema({
   context: 'https://schema.org',
   type: 'Person',
@@ -113,8 +36,6 @@ useSchema({
   visuallyHidden: true,
 })
 
-// Add FAQPage Schema for Person Schema-related questions
-// Note: useSchemaFaq() also automatically normalizes URLs like useSchema()
 useSchemaFaq({
   mainEntity: [
     {
@@ -145,109 +66,83 @@ useSchemaFaq({
 })
 </script>
 
-<style scoped>
-.profile-page {
-  min-height: 100vh;
-  padding: 2rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
+<template>
+  <div class="space-y-6">
+    <UCard>
+      <div class="flex flex-col sm:flex-row gap-6">
+        <UAvatar
+          v-if="person.image"
+          :src="person.image"
+          :alt="person.name"
+          size="3xl"
+        />
+        <div class="flex-1 space-y-2">
+          <h1 class="text-3xl font-bold">
+            {{ person.name }}
+          </h1>
+          <p
+            v-if="person.alternateName"
+            class="text-lg text-primary"
+          >
+            {{ person.alternateName }}
+          </p>
+          <p
+            v-if="person.jobTitle"
+            class="text-xl text-gray-600 dark:text-gray-400"
+          >
+            {{ person.jobTitle }}
+          </p>
+          <p
+            v-if="person.description"
+            class="text-gray-600 dark:text-gray-400"
+          >
+            {{ person.description }}
+          </p>
+        </div>
+      </div>
+    </UCard>
 
-.container {
-  max-width: 800px;
-  margin: 0 auto;
-  background: white;
-  border-radius: 12px;
-  padding: 3rem;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-}
+    <UCard
+      v-if="person.knowsAbout && person.knowsAbout.length > 0"
+    >
+      <template #header>
+        <h2 class="text-xl font-semibold">
+          Technical Stack
+        </h2>
+      </template>
+      <div class="flex flex-wrap gap-2">
+        <UBadge
+          v-for="(skill, index) in person.knowsAbout"
+          :key="index"
+          :label="skill"
+          color="neutral"
+          variant="soft"
+        />
+      </div>
+    </UCard>
 
-.profile-header {
-  display: flex;
-  gap: 2rem;
-  margin-bottom: 2rem;
-  padding-bottom: 2rem;
-  border-bottom: 1px solid #e2e8f0;
-}
-
-.profile-image {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 4px solid #667eea;
-}
-
-.profile-info {
-  flex: 1;
-}
-
-h1 {
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
-  color: #1a202c;
-}
-
-.alternate-name {
-  font-size: 1.1rem;
-  color: #667eea;
-  font-weight: 500;
-  margin-bottom: 0.5rem;
-}
-
-.job-title {
-  font-size: 1.2rem;
-  color: #4a5568;
-  margin-bottom: 1rem;
-  font-weight: 500;
-}
-
-.description {
-  font-size: 1rem;
-  color: #718096;
-  line-height: 1.6;
-  margin: 0;
-}
-
-.skills-section,
-.social-section {
-  margin-top: 2rem;
-}
-
-h2 {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-  color: #2d3748;
-}
-
-.skills-list,
-.social-list {
-  list-style: none;
-  padding: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.skills-list li {
-  background: #edf2f7;
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  font-size: 0.9rem;
-  color: #2d3748;
-}
-
-.social-list li {
-  margin-bottom: 0.5rem;
-}
-
-.social-list a {
-  color: #2563eb;
-  text-decoration: none;
-  transition: color 0.2s;
-}
-
-.social-list a:hover {
-  color: #1d4ed8;
-  text-decoration: underline;
-}
-</style>
+    <UCard
+      v-if="person.sameAs && person.sameAs.length > 0"
+    >
+      <template #header>
+        <h2 class="text-xl font-semibold">
+          Social Media
+        </h2>
+      </template>
+      <ul class="space-y-2">
+        <li
+          v-for="(url, index) in person.sameAs"
+          :key="index"
+        >
+          <ULink
+            :to="url"
+            external
+            class="text-primary"
+          >
+            {{ url }}
+          </ULink>
+        </li>
+      </ul>
+    </UCard>
+  </div>
+</template>

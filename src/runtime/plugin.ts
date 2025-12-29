@@ -6,7 +6,7 @@ import type { GlobalSchema, ModuleOptions } from './types'
  * Normalize path for comparison
  * Removes trailing slashes and ensures consistent format
  */
-function normalizePath(path: string): string {
+const normalizePath = (path: string): string => {
   // Remove trailing slash except for root path
   if (path === '/') {
     return '/'
@@ -20,7 +20,7 @@ function normalizePath(path: string): string {
  * @param currentPath - Current route path
  * @returns true if schema should be applied to current route
  */
-function matchesRoute(schemaUrl: string | undefined, currentPath: string): boolean {
+const matchesRoute = (schemaUrl: string | undefined, currentPath: string): boolean => {
   // If schema has no URL, apply to all routes (backward compatibility)
   if (!schemaUrl) {
     return true
@@ -107,21 +107,25 @@ export default defineNuxtPlugin(() => {
       const { renderHtml: _renderHtml, visuallyHidden: _visuallyHidden, ...schemaData } = schema
 
       // Add default value if context is missing
+      // Mark as plugin-level (not page-level) so page-level schemas can override
       useSchema({
         context: 'https://schema.org',
         ...schemaData,
         renderHtml,
         visuallyHidden,
+        _isPageLevel: false, // Mark as plugin-level schema
       })
     }
   }
   else {
     // Inject default Project Schema if schemas is missing
+    // Mark as plugin-level (not page-level) so page-level schemas can override
     useSchema({
       context: 'https://schema.org',
       type: 'Project',
       renderHtml: globalRenderHtml,
       visuallyHidden: globalVisuallyHidden,
+      _isPageLevel: false, // Mark as plugin-level schema
     })
   }
 })
