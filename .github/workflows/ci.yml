@@ -47,9 +47,6 @@ jobs:
       - name: Install dependencies
         run: bun install
 
-      - name: Install playground dependencies
-        run: cd playground && bun install && cd ..
-
       - name: Playground prepare
         run: bun run dev:prepare
 
