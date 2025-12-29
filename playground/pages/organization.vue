@@ -1,57 +1,12 @@
-<template>
-  <div class="about-page">
-    <div class="container">
-      <h1>{{ organization.name }}</h1>
-      <p class="description">
-        {{ organization.description }}
-      </p>
-
-      <div class="info-section">
-        <h2>Company Information</h2>
-        <ul>
-          <li><strong>Website:</strong> <a :href="organization.url">{{ organization.url }}</a></li>
-          <li v-if="organization.contactPoint">
-            <strong>Contact:</strong> {{ organization.contactPoint.telephone }}
-          </li>
-          <li v-if="organization.contactPoint">
-            <strong>Email:</strong> {{ organization.contactPoint.email }}
-          </li>
-        </ul>
-      </div>
-
-      <div
-        v-if="organization.sameAs && organization.sameAs.length > 0"
-        class="social-section"
-      >
-        <h2>Social Media</h2>
-        <ul>
-          <li
-            v-for="(url, index) in organization.sameAs"
-            :key="index"
-          >
-            <a
-              :href="url"
-              target="_blank"
-              rel="noopener noreferrer"
-            >{{ url }}</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
-// Organization data
-// Note: Mix of absolute and relative URLs to demonstrate URL normalization
 const organization = {
   name: 'Example Company',
-  url: '/', // Relative URL - will be normalized to absolute
+  url: '/',
   description: 'Example Company provides the best services.',
-  logo: '/images/logo.png', // Relative URL - will be normalized to absolute
+  logo: '/images/logo.png',
   sameAs: [
-    'https://github.com/example', // Absolute URL - used as-is
-    '/social/twitter', // Relative URL - will be normalized to absolute
+    'https://github.com/example',
+    '/social/twitter',
   ],
   contactPoint: {
     telephone: '+1-555-123-4567',
@@ -60,11 +15,6 @@ const organization = {
   },
 }
 
-// Add Organization Schema
-// Note: useSchema() automatically normalizes URLs:
-// - Absolute URLs (http:// or https://) are used as-is
-// - Relative URLs are combined with the base URL (from useRequestURL() or app.baseURL)
-// - URL normalization applies recursively to nested objects and arrays
 useSchema({
   context: 'https://schema.org',
   type: 'Organization',
@@ -83,8 +33,6 @@ useSchema({
   visuallyHidden: true,
 })
 
-// Add FAQPage Schema for Organization Schema-related questions
-// Note: useSchemaFaq() also automatically normalizes URLs like useSchema()
 useSchemaFaq({
   mainEntity: [
     {
@@ -115,58 +63,76 @@ useSchemaFaq({
 })
 </script>
 
-<style scoped>
-.about-page {
-  min-height: 100vh;
-  padding: 2rem;
-}
+<template>
+  <div class="space-y-6">
+    <UCard>
+      <h1 class="text-3xl font-bold mb-4">
+        {{ organization.name }}
+      </h1>
+      <p class="text-lg text-gray-600 dark:text-gray-400 mb-6">
+        {{ organization.description }}
+      </p>
 
-.container {
-  max-width: 800px;
-  margin: 0 auto;
-  background: white;
-  border-radius: 12px;
-  padding: 3rem;
-}
+      <div class="space-y-4">
+        <div>
+          <h2 class="text-xl font-semibold mb-3">
+            Company Information
+          </h2>
+          <ul class="space-y-2">
+            <li>
+              <strong>
+                Website:
+              </strong>
+              <ULink
+                :to="organization.url"
+                class="ml-2 text-primary"
+              >
+                {{ organization.url }}
+              </ULink>
+            </li>
+            <li
+              v-if="organization.contactPoint"
+            >
+              <strong>
+                Contact:
+              </strong>
+              <span class="ml-2">
+                {{ organization.contactPoint.telephone }}
+              </span>
+            </li>
+            <li
+              v-if="organization.contactPoint"
+            >
+              <strong>Email:</strong>
+              <span class="ml-2">
+                {{ organization.contactPoint.email }}
+              </span>
+            </li>
+          </ul>
+        </div>
 
-h1 {
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
-}
-
-.description {
-  font-size: 1.1rem;
-  margin-bottom: 2rem;
-  line-height: 1.6;
-}
-
-.info-section,
-.social-section {
-  margin-top: 2rem;
-}
-
-.info-section h2,
-.social-section h2 {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-}
-
-ul {
-  list-style: none;
-  padding: 0;
-}
-
-li {
-  margin-bottom: 0.5rem;
-  line-height: 1.6;
-}
-
-a {
-  color: #2563eb;
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
-}
-</style>
+        <div
+          v-if="organization.sameAs && organization.sameAs.length > 0"
+        >
+          <h2 class="text-xl font-semibold mb-3">
+            Social Media
+          </h2>
+          <ul class="space-y-2">
+            <li
+              v-for="(url, index) in organization.sameAs"
+              :key="index"
+            >
+              <ULink
+                :to="url"
+                external
+                class="text-primary"
+              >
+                {{ url }}
+              </ULink>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </UCard>
+  </div>
+</template>
