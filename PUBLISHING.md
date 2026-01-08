@@ -1,58 +1,58 @@
-# Nuxt AEO 모듈 발행 가이드
+# Nuxt AEO Module Publishing Guide
 
-이 문서는 `nuxt-aeo` 모듈을 npm에 발행하고 Nuxt 모듈 생태계에 등록하는 방법을 안내합니다.
+This document guides you through publishing the `nuxt-aeo` module to npm and registering it in the Nuxt module ecosystem.
 
-## 사전 준비
+## Prerequisites
 
-### 1. npm 로그인 확인
+### 1. Check npm Login
 
-먼저 npm에 로그인되어 있는지 확인하세요:
+First, verify that you are logged in to npm:
 
 ```bash
 npm whoami
 ```
 
-로그인되어 있지 않다면:
+If not logged in:
 
 ```bash
 npm login
 ```
 
-### 2. npm 캐시 권한 문제 해결 (필요한 경우)
+### 2. Resolve npm Cache Permission Issues (if needed)
 
-npm 캐시 권한 문제가 발생하는 경우 다음 명령어를 실행하세요:
+If you encounter npm cache permission issues, run the following command:
 
 ```bash
 sudo chown -R $(whoami) ~/.npm
 ```
 
-### 3. Git 저장소 확인
+### 3. Verify Git Repository
 
-Git 저장소가 설정되어 있고 원격 저장소가 연결되어 있는지 확인하세요:
+Check that the Git repository is set up and connected to a remote repository:
 
 ```bash
 git remote -v
 ```
 
-원격 저장소가 없다면:
+If there's no remote repository:
 
 ```bash
 git remote add origin https://github.com/yeonjulee1005/nuxt-aeo.git
 ```
 
-## npm 발행 단계
+## npm Publishing Steps
 
-### 1. 빌드 확인
+### 1. Verify Build
 
-모듈이 제대로 빌드되는지 확인:
+Verify that the module builds correctly:
 
 ```bash
 bun prepack
 ```
 
-### 2. 테스트 실행
+### 2. Run Tests
 
-모든 테스트가 통과하는지 확인:
+Verify that all tests pass:
 
 ```bash
 bun test
@@ -60,216 +60,216 @@ bun test:types
 bun lint
 ```
 
-### 3. 버전 업데이트
+### 3. Update Version
 
-새 버전을 발행하기 전에 버전을 업데이트하세요:
+Update the version before publishing a new version:
 
-- 패치 버전 (1.0.5 → 1.0.6): `bun version:patch`
-- 마이너 버전 (1.0.5 → 1.1.0): `bun version:minor`
-- 메이저 버전 (1.0.5 → 2.0.0): `bun version:major`
+- Patch version (1.0.5 → 1.0.6): `bun version:patch`
+- Minor version (1.0.5 → 1.1.0): `bun version:minor`
+- Major version (1.0.5 → 2.0.0): `bun version:major`
 
-또는 `package.json`에서 직접 버전을 수정할 수 있습니다.
+Alternatively, you can directly modify the version in `package.json`.
 
-### 4. 발행 방법
+### 4. Publishing Methods
 
-#### 방법 1: release 스크립트 사용 (권장)
+#### Method 1: Using release script (Recommended)
 
-자동으로 린트, 테스트, 빌드, 변경 로그 생성, 발행, Git 푸시를 수행합니다:
+Automatically performs linting, testing, building, changelog generation, publishing, and Git push:
 
 ```bash
 bun release
 ```
 
-#### 방법 2: 수동 발행
+#### Method 2: Manual Publishing
 
 ```bash
-# 1. 빌드
+# 1. Build
 bun prepack
 
-# 2. 발행
+# 2. Publish
 npm publish
 
-# 3. Git 태그 생성 및 푸시 (선택사항)
+# 3. Create and push Git tag (optional)
 git tag v1.0.6
 git push origin v1.0.6
 ```
 
-### 5. 발행 확인
+### 5. Verify Publication
 
-npm에서 패키지가 제대로 발행되었는지 확인:
+Verify that the package was published correctly on npm:
 
 ```bash
 npm view nuxt-aeo
 ```
 
-또는 웹 브라우저에서 확인:
+Or check in a web browser:
 https://www.npmjs.com/package/nuxt-aeo
 
-## 패키지 업데이트 방법
+## Package Update Methods
 
-이미 발행된 패키지를 업데이트하는 방법입니다.
+This section covers how to update an already published package.
 
-### 1. 버전 업데이트
+### 1. Update Version
 
-새 버전으로 업데이트:
+Update to a new version:
 
 ```bash
-# 패치 버전 업데이트 (1.0.5 → 1.0.6)
+# Update patch version (1.0.5 → 1.0.6)
 bun version:patch
 
-# 마이너 버전 업데이트 (1.0.5 → 1.1.0)
+# Update minor version (1.0.5 → 1.1.0)
 bun version:minor
 
-# 메이저 버전 업데이트 (1.0.5 → 2.0.0)
+# Update major version (1.0.5 → 2.0.0)
 bun version:major
 ```
 
-또는 `package.json`에서 직접 버전을 수정할 수 있습니다.
+Alternatively, you can directly modify the version in `package.json`.
 
-### 2. 업데이트 발행
+### 2. Publish Update
 
-#### 방법 1: release 스크립트 사용 (권장)
+#### Method 1: Using release script (Recommended)
 
 ```bash
 bun release
 ```
 
-이 명령어는 다음을 자동으로 수행합니다:
-- 린트 검사
-- 테스트 실행
-- 빌드
-- CHANGELOG 생성
-- npm 발행
-- Git 태그 생성 및 푸시
+This command automatically performs:
+- Lint checks
+- Test execution
+- Build
+- CHANGELOG generation
+- npm publishing
+- Git tag creation and push
 
-#### 방법 2: 수동 업데이트 발행
+#### Method 2: Manual Update Publishing
 
 ```bash
-# 1. 빌드
+# 1. Build
 bun prepack
 
-# 2. 업데이트 발행
+# 2. Publish update
 npm publish
 
-# 3. Git 태그 생성 및 푸시
+# 3. Create and push Git tag
 git tag v1.0.6
 git push origin v1.0.6
 ```
 
-### 3. 업데이트 확인
+### 3. Verify Update
 
-업데이트가 제대로 발행되었는지 확인:
+Verify that the update was published correctly:
 
 ```bash
-# 최신 버전 확인
+# Check latest version
 npm view nuxt-aeo version
 
-# 전체 정보 확인
+# Check full information
 npm view nuxt-aeo
 
-# 특정 버전 확인
+# Check specific version
 npm view nuxt-aeo@1.0.6
 ```
 
-### 4. 사용자에게 알리기
+### 4. Notify Users
 
-업데이트가 완료되면:
-- CHANGELOG.md에 변경 사항이 자동으로 추가됩니다
-- GitHub Releases에 태그가 생성됩니다
-- npm 패키지 페이지에 새 버전이 표시됩니다
+Once the update is complete:
+- Changes will be automatically added to CHANGELOG.md
+- A tag will be created in GitHub Releases
+- The new version will appear on the npm package page
 
-## Nuxt 모듈 생태계 등록
+## Nuxt Module Ecosystem Registration
 
-npm에 발행이 완료되면 Nuxt 공식 모듈 디렉토리에 등록할 수 있습니다.
+Once publishing to npm is complete, you can register in the official Nuxt module directory.
 
-### 옵션 1: 모듈 리스트에 등록 (간단한 등록)
+### Option 1: Register in Module List (Simple Registration)
 
-[nuxt/modules](https://github.com/nuxt/modules) 저장소에 이슈를 생성하여 모듈을 리스트에 등록할 수 있습니다.
+You can register your module in the list by creating an issue in the [nuxt/modules](https://github.com/nuxt/modules) repository.
 
-### 옵션 2: nuxt-modules 조직에 합류 (권장)
+### Option 2: Join nuxt-modules Organization (Recommended)
 
-`nuxt-modules` 조직에 합류하면 다음과 같은 이점이 있습니다:
-- 다른 유지보수자들의 도움을 받을 수 있음
-- `@nuxtjs/` 스코프로 이름 변경 가능 (예: `@nuxtjs/aeo`)
-- 문서를 위한 서브도메인 제공 (예: `aeo.nuxtjs.org`)
-- 더 많은 사용자에게 노출
+Joining the `nuxt-modules` organization provides the following benefits:
+- Receive help from other maintainers
+- Can rename to `@nuxtjs/` scope (e.g., `@nuxtjs/aeo`)
+- Subdomain provided for documentation (e.g., `aeo.nuxtjs.org`)
+- More exposure to users
 
-#### nuxt-modules 합류 절차
+#### nuxt-modules Joining Procedure
 
-1. **이슈 템플릿 준비**
+1. **Prepare Issue Template**
 
-  프로젝트 루트에 `NUXT_MODULES_ISSUE.md` 파일이 생성되어 있습니다. 이 파일의 내용을 복사하여 이슈에 붙여넣기
+  A `NUXT_MODULES_ISSUE.md` file is created in the project root. Copy the contents of this file and paste it into the issue.
 
-2. **이슈 생성**
+2. **Create Issue**
   
-  [nuxt/modules](https://github.com/nuxt/modules) 저장소에 이슈를 생성하세요:
+  Create an issue in the [nuxt/modules](https://github.com/nuxt/modules) repository:
 
-  1. https://github.com/nuxt/modules 로 이동
-  2. "Issues" 탭 클릭
-  3. "New Issue" 클릭
-  4. `NUXT_MODULES_ISSUE.md` 파일의 내용을 복사하여 이슈에 붙여넣기
+  1. Go to https://github.com/nuxt/modules
+  2. Click the "Issues" tab
+  3. Click "New Issue"
+  4. Copy the contents of the `NUXT_MODULES_ISSUE.md` file and paste it into the issue
 
-3. **Nuxt 팀 검토 대기**
+3. **Wait for Nuxt Team Review**
   
-  Nuxt 팀이 모듈을 검토하고 피드백을 제공할 수 있습니다. 적절히 응답하세요.
+  The Nuxt team will review the module and may provide feedback. Respond appropriately.
 
-4. **저장소 이전**
+4. **Repository Transfer**
 
-  승인되면 저장소를 `nuxt-modules` 조직으로 이전하고, 필요시 패키지 이름을 `@nuxtjs/aeo`로 변경할 수 있습니다.
+  Once approved, the repository can be transferred to the `nuxt-modules` organization, and the package name can be changed to `@nuxtjs/aeo` if needed.
 
-5. **완료** 
-  합류가 완료되면 모듈이 [nuxt.com/modules](https://nuxt.com/modules)에 등록되고, `@nuxtjs/` 스코프로 사용할 수 있게 됩니다.
+5. **Completion**
+  Once the join is complete, the module will be registered at [nuxt.com/modules](https://nuxt.com/modules) and can be used with the `@nuxtjs/` scope.
 
-#### 참고 자료
+#### Reference Materials
 
-- [Nuxt 공식 문서: Join nuxt-modules](https://nuxt.com/docs/4.x/guide/modules/ecosystem#join-nuxt-modules)
+- [Nuxt Official Documentation: Join nuxt-modules](https://nuxt.com/docs/4.x/guide/modules/ecosystem#join-nuxt-modules)
 
-## 추가 참고사항
+## Additional Notes
 
-### 패키지 이름 규칙
+### Package Naming Rules
 
-- Nuxt 모듈은 `nuxt-` 접두사를 사용하는 것이 권장됩니다
-- 현재 패키지 이름: `nuxt-aeo` ✅
+- Nuxt modules are recommended to use the `nuxt-` prefix
+- Current package name: `nuxt-aeo` ✅
 
-### 버전 관리
+### Version Management
 
-- [Semantic Versioning](https://semver.org/)을 따르세요
-- 주요 변경사항은 메이저 버전 업데이트
-- 새로운 기능 추가는 마이너 버전 업데이트
-- 버그 수정은 패치 버전 업데이트
+- Follow [Semantic Versioning](https://semver.org/)
+- Major changes require major version update
+- New features require minor version update
+- Bug fixes require patch version update
 
 ### CHANGELOG
 
-`npm run release`를 사용하면 자동으로 CHANGELOG.md가 생성됩니다. 
-수동으로 작성하려면 `changelogen`을 사용하세요:
+Using `npm run release` will automatically generate CHANGELOG.md.
+To write manually, use `changelogen`:
 
 ```bash
 npx changelogen --release
 ```
 
-## 문제 해결
+## Troubleshooting
 
-### npm publish 실패 시
+### When npm publish Fails
 
-1. **401 Unauthorized**: npm 로그인이 필요합니다. `npm login` 실행
-2. **403 Forbidden**: 패키지 이름이 이미 사용 중이거나 권한이 없습니다
-3. **EPERM 오류**: npm 캐시 권한 문제. `sudo chown -R $(whoami) ~/.npm` 실행
+1. **401 Unauthorized**: npm login required. Run `npm login`
+2. **403 Forbidden**: Package name is already in use or you don't have permission
+3. **EPERM Error**: npm cache permission issue. Run `sudo chown -R $(whoami) ~/.npm`
 
-### Git 태그 문제
+### Git Tag Issues
 
-태그가 이미 존재하는 경우:
+If a tag already exists:
 
 ```bash
-# 로컬 태그 삭제
+# Delete local tag
 git tag -d v1.0.6
 
-# 원격 태그 삭제
+# Delete remote tag
 git push origin :refs/tags/v1.0.6
 ```
 
-## 참고 링크
+## Reference Links
 
-- [npm 문서](https://docs.npmjs.com/)
-- [Nuxt 모듈 개발 가이드](https://nuxt.com/docs/4.x/guide/going-further/modules)
-- [Nuxt Modules 저장소](https://github.com/nuxt/modules)
+- [npm Documentation](https://docs.npmjs.com/)
+- [Nuxt Module Development Guide](https://nuxt.com/docs/4.x/guide/going-further/modules)
+- [Nuxt Modules Repository](https://github.com/nuxt/modules)
 - [Semantic Versioning](https://semver.org/)
