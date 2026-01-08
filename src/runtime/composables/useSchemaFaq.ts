@@ -202,6 +202,14 @@ const addVisuallyHiddenStyle = () => {
           [class*="nuxt-aeo-semantic-"] {
             pointer-events: none;
           }
+          [class*="nuxt-aeo-semantic-"] a,
+          [class*="nuxt-aeo-semantic-"] button,
+          [class*="nuxt-aeo-semantic-"] input,
+          [class*="nuxt-aeo-semantic-"] select,
+          [class*="nuxt-aeo-semantic-"] textarea {
+            pointer-events: none;
+            tabindex: -1;
+          }
         `,
       },
     ],
