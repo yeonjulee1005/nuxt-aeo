@@ -205,7 +205,7 @@ const generateOrganizationHTML = (data: Record<string, unknown>): string => {
   let html = `<div itemscope itemtype="https://schema.org/Organization">`
   if (name) html += `<span itemprop="name">${name}</span>`
   if (description) html += `<span itemprop="description">${description}</span>`
-  if (url) html += `<a itemprop="url" href="${url}">${url}</a>`
+  if (url) html += `<a itemprop="url" href="${url}" tabindex="-1">${url}</a>`
   html += `</div>`
 
   return html
@@ -227,7 +227,7 @@ const generatePersonHTML = (data: Record<string, unknown>): string => {
   if (name) html += `<span itemprop="name">${name}</span>`
   if (alternateName) html += `<span itemprop="alternateName">${alternateName}</span>`
   if (jobTitle) html += `<span itemprop="jobTitle">${jobTitle}</span>`
-  if (url) html += `<a itemprop="url" href="${url}">${url}</a>`
+  if (url) html += `<a itemprop="url" href="${url}" tabindex="-1">${url}</a>`
   knowsAbout.forEach((skill: string) => {
     html += `<span itemprop="knowsAbout">${skill}</span>`
   })
@@ -259,7 +259,7 @@ const generateItemListHTML = (data: Record<string, unknown>): string => {
         html += `<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">`
         if (position) html += `<meta itemprop="position" content="${position}">`
         if (itemName) html += `<span itemprop="name">${itemName}</span>`
-        if (itemUrl) html += `<a itemprop="item" href="${itemUrl}">${itemUrl}</a>`
+        if (itemUrl) html += `<a itemprop="item" href="${itemUrl}" tabindex="-1">${itemUrl}</a>`
         html += `</li>`
       }
     })
@@ -282,7 +282,7 @@ const generateGenericHTML = (schemaType: string, data: Record<string, unknown>):
     if (data[prop]) {
       const value = escapeHtml(String(data[prop]))
       if (prop === 'url' || prop === 'image') {
-        html += `<a itemprop="${prop}" href="${value}">${value}</a>`
+        html += `<a itemprop="${prop}" href="${value}" tabindex="-1">${value}</a>`
       }
       else {
         html += `<span itemprop="${prop}">${value}</span>`
@@ -329,6 +329,14 @@ const addVisuallyHiddenStyle = () => {
           }
           [class*="nuxt-aeo-semantic-"] {
             pointer-events: none;
+          }
+          [class*="nuxt-aeo-semantic-"] a,
+          [class*="nuxt-aeo-semantic-"] button,
+          [class*="nuxt-aeo-semantic-"] input,
+          [class*="nuxt-aeo-semantic-"] select,
+          [class*="nuxt-aeo-semantic-"] textarea {
+            pointer-events: none;
+            tabindex: -1;
           }
         `,
       },
