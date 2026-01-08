@@ -199,6 +199,9 @@ const addVisuallyHiddenStyle = () => {
             white-space: nowrap;
             border: 0;
           }
+          [class*="nuxt-aeo-semantic-"] {
+            pointer-events: none;
+          }
         `,
       },
     ],
@@ -221,6 +224,7 @@ const injectSemanticHTML = (semanticHtml: string, visuallyHidden: boolean) => {
   const semanticDiv = document.createElement('div')
   semanticDiv.className = `nuxt-aeo-semantic-faqpage ${visuallyHidden ? 'nuxt-aeo-visually-hidden' : ''}`
   semanticDiv.setAttribute('aria-hidden', 'true')
+  semanticDiv.setAttribute('tabindex', '-1')
   semanticDiv.innerHTML = semanticHtml
   document.body.appendChild(semanticDiv)
 }

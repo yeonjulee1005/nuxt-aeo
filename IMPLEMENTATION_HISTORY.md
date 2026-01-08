@@ -1,10 +1,10 @@
-# Nuxt AEO 모듈 구현 히스토리
+# Nuxt AEO Module Implementation History
 
-## 1. 기본 구조 설계
+## 1. Basic Structure Design
 
-### 모듈 진입점 (`src/module.ts`)
+### Module Entry Point (`src/module.ts`)
 
-Nuxt 모듈의 기본 구조를 설계했습니다:
+We designed the basic structure of the Nuxt module:
 
 ```typescript
 export default defineNuxtModule<ModuleOptions>({
@@ -13,29 +13,29 @@ export default defineNuxtModule<ModuleOptions>({
     configKey: 'aeo',
   },
   setup(options, nuxt) {
-    // 모듈 옵션을 runtime config에 추가
-    // 플러그인 등록
-    // composable 자동 import 설정
+    // Add module options to runtime config
+    // Register plugins
+    // Configure automatic composable imports
   },
 })
 ```
 
-**핵심 설계 결정:**
-- `configKey: 'aeo'`로 설정하여 `nuxt.config.ts`에서 `aeo` 옵션으로 접근 가능
-- `runtimeConfig.public`에 옵션을 저장하여 클라이언트/서버 양쪽에서 접근 가능
-- `addImportsDir`로 composable 자동 import 구현
+**Key Design Decisions:**
+- Set `configKey: 'aeo'` to access via `aeo` option in `nuxt.config.ts`
+- Store options in `runtimeConfig.public` for access from both client and server
+- Implement automatic composable imports using `addImportsDir`
 
 ---
 
-## 2. 범용 Schema Composable 구현 (`useSchema`)
+## 2. Universal Schema Composable Implementation (`useSchema`)
 
-### 2.1 초기 구현: JSON-LD 생성
+### 2.1 Initial Implementation: JSON-LD Generation
 
-가장 먼저 Schema.org JSON-LD를 생성하는 기본 기능을 구현했습니다:
+We first implemented the basic functionality to generate Schema.org JSON-LD:
 
 ```typescript
 export function useSchema(schema: Record<string, unknown>) {
-  // JSON-LD를 <head>에 주입
+  // Inject JSON-LD into <head>
   useHead({
     script: [{
       type: 'application/ld+json',
@@ -45,19 +45,19 @@ export function useSchema(schema: Record<string, unknown>) {
 }
 ```
 
-### 2.2 키 변환 로직 추가
+### 2.2 Key Transformation Logic Addition
 
-사용자 편의성을 위해 `context`와 `type`을 `@context`와 `@type`으로 자동 변환하는 기능을 추가했습니다:
+We added functionality to automatically convert `context` and `type` to `@context` and `@type` for better developer experience:
 
 ```typescript
 function transformSchemaKeys(obj: Record<string, unknown>): Record<string, unknown> {
   const result: Record<string, unknown> = {}
   
   for (const [key, value] of Object.entries(obj)) {
-    // context → @context, type → @type 변환
+    // Transform context → @context, type → @type
     const transformedKey = key === 'context' ? '@context' : key === 'type' ? '@type' : key
     
-    // 중첩 객체와 배열도 재귀적으로 변환
+    // Recursively transform nested objects and arrays
     if (value && typeof value === 'object' && !Array.isArray(value)) {
       result[transformedKey] = transformSchemaKeys(value as Record<string, unknown>)
     } else if (Array.isArray(value)) {
@@ -75,17 +75,17 @@ function transformSchemaKeys(obj: Record<string, unknown>): Record<string, unkno
 }
 ```
 
-**왜 이렇게 구현했나요?**
-- JavaScript 객체에서 `@`로 시작하는 키는 따옴표 없이 사용하기 어려움
-- `context`, `type`을 일반 속성처럼 사용할 수 있게 하여 개발자 경험 개선
-- 중첩된 객체와 배열도 자동 변환하여 모든 Schema 구조 지원
+**Why this implementation?**
+- Keys starting with `@` in JavaScript objects are difficult to use without quotes
+- Allows using `context` and `type` as regular properties, improving developer experience
+- Automatically converts nested objects and arrays to support all Schema structures
 
-### 2.3 시멘틱 HTML 자동 생성 기능 추가
+### 2.3 Semantic HTML Auto-generation Feature Addition
 
-AI 모델의 학습을 최적화하기 위해 시멘틱 HTML 자동 생성 기능을 추가했습니다:
+We added semantic HTML auto-generation functionality to optimize AI model learning:
 
 ```typescript
-// Schema 타입별 HTML 생성 함수
+// HTML generation function for each Schema type
 function generateSemanticHTML(schemaType: string, schemaData: Record<string, unknown>): string | null {
   const type = schemaType.toLowerCase()
   
@@ -102,31 +102,32 @@ function generateSemanticHTML(schemaType: string, schemaData: Record<string, unk
 }
 ```
 
-**구현 세부사항:**
-- `itemscope`, `itemtype`, `itemprop` 속성을 사용한 마이크로데이터 형식
-- HTML 이스케이프 처리로 XSS 방지
-- `visually-hidden` CSS 클래스로 사용자에게는 보이지 않지만 크롤러는 읽을 수 있도록 처리
+**Implementation Details:**
+- Microdata format using `itemscope`, `itemtype`, `itemprop` attributes
+- HTML escaping to prevent XSS
+- `visually-hidden` CSS class to hide from users while remaining readable by crawlers
 
-### 2.4 클라이언트 사이드 HTML 주입
+### 2.4 Client-side HTML Injection
 
-시멘틱 HTML을 클라이언트 사이드에서 동적으로 주입하는 로직을 구현했습니다:
+We implemented logic to dynamically inject semantic HTML on the client side:
 
 ```typescript
 if (import.meta.client) {
   const injectSemanticHTML = () => {
-    // 기존 HTML 제거 (같은 타입이 중복 주입되는 것 방지)
+    // Remove existing HTML (prevent duplicate injection of same type)
     const existing = document.querySelector(`.nuxt-aeo-semantic-${schemaType.toLowerCase()}`)
     if (existing) existing.remove()
     
-    // 새로운 시멘틱 HTML 주입
+    // Inject new semantic HTML
     const semanticDiv = document.createElement('div')
     semanticDiv.className = `nuxt-aeo-semantic-${schemaType.toLowerCase()} ${visuallyHidden ? 'nuxt-aeo-visually-hidden' : ''}`
     semanticDiv.setAttribute('aria-hidden', 'true')
+    semanticDiv.setAttribute('tabindex', '-1')
     semanticDiv.innerHTML = semanticHtml
     document.body.appendChild(semanticDiv)
   }
   
-  // DOM 준비 상태에 따라 실행
+  // Execute based on DOM ready state
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', injectSemanticHTML)
   } else {
@@ -137,20 +138,20 @@ if (import.meta.client) {
 
 ---
 
-## 3. FAQPage 전용 Composable 구현 (`useSchemaPage`)
+## 3. FAQPage-specific Composable Implementation (`useSchemaFaq`)
 
-### 3.1 초기 설계
+### 3.1 Initial Design
 
-FAQPage는 가장 많이 사용되는 Schema 타입 중 하나였기 때문에, 전용 composable을 만들기로 결정했습니다:
+Since FAQPage is one of the most commonly used Schema types, we decided to create a dedicated composable:
 
 ```typescript
-export function useSchemaPage(data: {
+export function useSchemaFaq(data: {
   mainEntity: Array<{
     name: string
     acceptedAnswer: { text: string }
   }>
 }) {
-  // useSchema를 내부적으로 사용
+  // Use useSchema internally
   useSchema({
     context: 'https://schema.org',
     type: 'FAQPage',
@@ -166,14 +167,14 @@ export function useSchemaPage(data: {
 }
 ```
 
-**설계 이유:**
-- FAQPage는 구조가 복잡하여 직접 작성하기 어려움
-- `name`, `acceptedAnswer.text`만 제공하면 나머지는 자동 변환
-- 타입 안전성 보장
+**Design Rationale:**
+- FAQPage structure is complex and difficult to write directly
+- Only need to provide `name` and `acceptedAnswer.text`, rest is automatically transformed
+- Ensures type safety
 
-### 3.2 시멘틱 HTML 생성 추가
+### 3.2 Semantic HTML Generation Addition
 
-FAQPage 전용 시멘틱 HTML 생성 함수를 구현했습니다:
+We implemented a FAQPage-specific semantic HTML generation function:
 
 ```typescript
 function generateFAQPageSemanticHTML(mainEntity: Array<{
@@ -204,29 +205,29 @@ function generateFAQPageSemanticHTML(mainEntity: Array<{
 }
 ```
 
-**기본값 설정:**
-- `renderHtml: true` (기본값) - FAQPage는 시멘틱 HTML이 중요
-- `visuallyHidden: true` (기본값) - 사용자 경험 유지
+**Default Settings:**
+- `renderHtml: true` (default) - Semantic HTML is important for FAQPage
+- `visuallyHidden: true` (default) - Maintains user experience
 
 ---
 
-## 4. 전역 스키마 자동 주입 (`plugin.ts`)
+## 4. Global Schema Auto-injection (`plugin.ts`)
 
-### 4.1 플러그인 구현
+### 4.1 Plugin Implementation
 
-모든 페이지에 전역 스키마를 자동으로 주입하는 플러그인을 구현했습니다:
+We implemented a plugin that automatically injects global schemas into all pages:
 
 ```typescript
 export default defineNuxtPlugin(() => {
   const config = useRuntimeConfig()
   const aeoConfig = config.public.aeo as ModuleOptions
   
-  // autoInject가 false면 주입하지 않음
+  // Don't inject if autoInject is false
   if (aeoConfig?.autoInject === false) {
     return
   }
   
-  // schemas 배열이 있으면 각각 주입
+  // Inject each schema if schemas array exists
   if (aeoConfig?.schemas && aeoConfig.schemas.length > 0) {
     for (const schema of aeoConfig.schemas) {
       useSchema({
@@ -237,7 +238,7 @@ export default defineNuxtPlugin(() => {
       })
     }
   } else {
-    // schemas가 없으면 기본 Project Schema 주입
+    // Inject default Project Schema if schemas is missing
     useSchema({
       context: 'https://schema.org',
       type: 'Project',
@@ -246,18 +247,18 @@ export default defineNuxtPlugin(() => {
 })
 ```
 
-**설계 결정:**
-- 플러그인은 모든 페이지에서 자동 실행
-- `autoInject: false` 옵션으로 전역 주입 비활성화 가능
-- 개별 스키마의 `renderHtml`, `visuallyHidden` 옵션이 전역 옵션보다 우선
+**Design Decisions:**
+- Plugin automatically runs on all pages
+- Can disable global injection with `autoInject: false` option
+- Individual schema's `renderHtml` and `visuallyHidden` options take precedence over global options
 
 ---
 
-## 5. 타입 안전성 보장
+## 5. Type Safety Guarantee
 
-### 5.1 TypeScript 타입 정의
+### 5.1 TypeScript Type Definitions
 
-모든 Schema 타입에 대한 TypeScript 타입을 정의했습니다:
+We defined TypeScript types for all Schema types:
 
 ```typescript
 export interface ModuleOptions {
@@ -276,9 +277,9 @@ export type GlobalSchema = {
 }
 ```
 
-### 5.2 Nuxt Config 타입 확장
+### 5.2 Nuxt Config Type Extension
 
-`nuxt.config.ts`에서 타입 체크가 가능하도록 타입을 확장했습니다:
+We extended types to enable type checking in `nuxt.config.ts`:
 
 ```typescript
 declare module '@nuxt/schema' {
@@ -290,40 +291,39 @@ declare module '@nuxt/schema' {
 
 ---
 
-## 6. 주요 구현 결정사항 요약
+## 6. Key Implementation Decision Summary
 
-### 6.1 왜 `useHead()`를 사용했나요?
+### 6.1 Why use `useHead()`?
 
-- Nuxt의 SSR 환경에서 `<head>` 태그에 안전하게 주입 가능
-- 클라이언트와 서버 양쪽에서 동작
-- Nuxt의 내장 기능을 활용하여 안정성 보장
+- Safely inject into `<head>` tag in Nuxt's SSR environment
+- Works on both client and server
+- Ensures stability by leveraging Nuxt's built-in functionality
 
-### 6.2 왜 시멘틱 HTML을 클라이언트에서 주입하나요?
+### 6.2 Why inject semantic HTML on the client side?
 
-- SSR에서는 `<body>`에 직접 주입하기 어려움
-- `useHead()`는 `<head>`에만 주입 가능
-- 클라이언트에서 주입하면 DOM 조작이 자유로움
-- `aria-hidden="true"`로 스크린 리더에 노출되지 않도록 처리
+- Difficult to directly inject into `<body>` in SSR
+- `useHead()` can only inject into `<head>`
+- Client-side injection allows free DOM manipulation
+- Handled with `aria-hidden="true"` to prevent exposure to screen readers
 
-### 6.3 왜 `visually-hidden` 클래스를 사용하나요?
+### 6.3 Why use `visually-hidden` class?
 
-- `display: none`은 일부 크롤러가 읽지 않을 수 있음
-- `visually-hidden`은 화면에는 보이지 않지만 DOM에는 존재
-- LLM 크롤러와 검색 엔진이 읽을 수 있음
-- 접근성 유지 (스크린 리더는 읽지 않음)
+- Some crawlers may not read `display: none`
+- `visually-hidden` is not visible on screen but exists in DOM
+- Readable by LLM crawlers and search engines
+- Maintains accessibility (screen readers don't read it)
 
-### 6.4 왜 `context`, `type`을 자동 변환하나요?
+### 6.4 Why automatically convert `context` and `type`?
 
-- JavaScript 객체에서 `@`로 시작하는 키는 사용하기 불편
-- `context: 'https://schema.org'`처럼 일반 속성처럼 사용 가능
-- 중첩 객체와 배열도 재귀적으로 변환하여 모든 Schema 구조 지원
+- Keys starting with `@` in JavaScript objects are inconvenient to use
+- Can use `context: 'https://schema.org'` like a regular property
+- Recursively converts nested objects and arrays to support all Schema structures
 
 ---
 
-## 7. 향후 개선 계획
+## 7. Future Improvement Plans
 
-1. **더 많은 Schema 타입 지원**: Article, TechArticle, NewsArticle 등
-2. **성능 최적화**: 시멘틱 HTML 생성 로직 최적화
-3. **타입 안전성 강화**: 더 엄격한 타입 체크
-4. **테스트 코드 추가**: 단위 테스트 및 통합 테스트
-
+1. **Support for More Schema Types**: Article, TechArticle, NewsArticle, etc.
+2. **Performance Optimization**: Optimize semantic HTML generation logic
+3. **Enhanced Type Safety**: Stricter type checking
+4. **Add Test Code**: Unit tests and integration tests
